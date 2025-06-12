@@ -14,23 +14,20 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class AdicionarCurso extends JDialog {
-
-    private JTextField campoCodigo;
     private JTextField campoNome;
     private JTextField campoCarga;
     private JTextField campoProfessor;
-    private boolean cursoSalvo = false;
-    private Curso novoCurso;
+    private Curso curso;
+    private boolean salvo = false;
 
-    public AdicionarCurso(JFrame parent) {
+    public AdicionarCurso(JFrame parent, int proximoCodigo) {
         super(parent, "Adicionar Curso", true);
-        setSize(400, 300);
-        setLocationRelativeTo(parent);
-        setLayout(new GridLayout(5, 2, 10, 10));
+        setSize(300, 250);
+        setLayout(new GridLayout(5, 2));
 
-        // Campos
         add(new JLabel("Código:"));
-        campoCodigo = new JTextField();
+        JTextField campoCodigo = new JTextField(String.valueOf(proximoCodigo));
+        campoCodigo.setEditable(false); // Gerado automaticamente
         add(campoCodigo);
 
         add(new JLabel("Nome:"));
@@ -45,46 +42,35 @@ public class AdicionarCurso extends JDialog {
         campoProfessor = new JTextField();
         add(campoProfessor);
 
-        // Botões
         JButton btnSalvar = new JButton("Salvar");
         JButton btnCancelar = new JButton("Cancelar");
+
+        btnSalvar.addActionListener(e -> {
+            try {
+                String nome = campoNome.getText();
+                int carga = Integer.parseInt(campoCarga.getText());
+                String professor = campoProfessor.getText();
+
+                curso = new Curso(proximoCodigo, nome, carga, professor);
+                salvo = true;
+                dispose();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Carga Horária deve ser numérica.");
+            }
+        });
+
+        btnCancelar.addActionListener(e -> dispose());
+
         add(btnSalvar);
         add(btnCancelar);
-
-        // Ação do botão Salvar
-        btnSalvar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    int codigo = Integer.parseInt(campoCodigo.getText());
-                    String nome = campoNome.getText();
-                    int carga = Integer.parseInt(campoCarga.getText());
-                    String professor = campoProfessor.getText();
-
-                    novoCurso = new Curso(codigo, nome, carga, professor);
-                    cursoSalvo = true;
-                    dispose(); // fecha o diálogo
-
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(AdicionarCurso.this,
-                        "Código e Carga Horária devem ser números inteiros.");
-                }
-            }
-        });
-
-        // Ação do botão Cancelar
-        btnCancelar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                dispose(); // fecha o diálogo sem salvar
-            }
-        });
     }
 
     public boolean foiSalvo() {
-        return cursoSalvo;
+        return salvo;
     }
 
     public Curso getCurso() {
-        return novoCurso;
+        return curso;
     }
 }
 

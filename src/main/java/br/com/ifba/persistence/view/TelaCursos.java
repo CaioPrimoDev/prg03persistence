@@ -33,7 +33,7 @@ public class TelaCursos extends JFrame {
 
         painelTopo.add(btnAdicionar);
         painelTopo.add(btnPesquisar);
-        add(painelTopo, BorderLayout.NORTH);
+        add(painelTopo, BorderLayout.NORTH);        
 
         // Painel de cursos
         painelPrincipal = new JPanel();
@@ -50,15 +50,26 @@ public class TelaCursos extends JFrame {
 
         // Ação para adicionar curso
         btnAdicionar.addActionListener((ActionEvent e) -> {
-            AdicionarCurso dialog = new AdicionarCurso(TelaCursos.this);
+            int proximoCodigo = 1;
+
+            if (!listaCursos.isEmpty()) {
+            // Encontra o maior código existente e soma 1
+            proximoCodigo = listaCursos.stream()
+                                   .mapToInt(Curso::getCodigo)
+                                   .max()
+                                   .getAsInt() + 1;
+            }
+
+            AdicionarCurso dialog = new AdicionarCurso(TelaCursos.this, proximoCodigo);
             dialog.setVisible(true);
-            
+
             if (dialog.foiSalvo()) {
                 Curso novo = dialog.getCurso();
                 listaCursos.add(novo);
-                atualizarTela();
+              atualizarTela();
             }
         });
+
 
 
 
@@ -75,56 +86,102 @@ public class TelaCursos extends JFrame {
 private void atualizarTela() {
     painelPrincipal.removeAll();
 
+    // Cabeçalho
+    JPanel cabecalho = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
+    cabecalho.setAlignmentX(Component.LEFT_ALIGNMENT);
+    cabecalho.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
+    cabecalho.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+    JLabel lblCodigo = new JLabel("Código");
+    lblCodigo.setPreferredSize(new Dimension(60, 20));
+
+    JLabel lblNome = new JLabel("Nome");
+    lblNome.setPreferredSize(new Dimension(150, 20));
+
+    JLabel lblCarga = new JLabel("Carga Horária");
+    lblCarga.setPreferredSize(new Dimension(90, 20));
+
+    JLabel lblProfessor = new JLabel("Professor");
+    lblProfessor.setPreferredSize(new Dimension(100, 20));
+
+    JLabel lblRemover = new JLabel("Remover");
+    lblRemover.setPreferredSize(new Dimension(80, 20));
+
+    JLabel lblEditar = new JLabel("Editar");
+    lblEditar.setPreferredSize(new Dimension(80, 20));
+
+    cabecalho.add(lblCodigo);
+    cabecalho.add(lblNome);
+    cabecalho.add(lblCarga);
+    cabecalho.add(lblProfessor);
+    cabecalho.add(lblRemover);
+    cabecalho.add(lblEditar);
+
+    painelPrincipal.add(cabecalho);
+
+    // 🔽 Lista de cursos
     for (int i = 0; i < listaCursos.size(); i++) {
-        final int index = i; // cópia final do índice
+        final int index = i;
         Curso curso = listaCursos.get(i);
 
-        JPanel linha = new JPanel();
-        linha.setLayout(new FlowLayout());
+        JPanel linha = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
+        linha.setAlignmentX(Component.LEFT_ALIGNMENT);
+        linha.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        linha.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
-        final JTextField campoCodigo = new JTextField(String.valueOf(curso.getCodigo()), 5);
-        final JTextField campoNome = new JTextField(curso.getNome(), 15);
-        final JTextField campoCarga = new JTextField(String.valueOf(curso.getCargaHoraria()), 5);
-        final JTextField campoProfessor = new JTextField(curso.getProfessor(), 10);
+        final JTextField campoCodigo = new JTextField(String.valueOf(curso.getCodigo()));
+        campoCodigo.setPreferredSize(new Dimension(60, 20));
+        campoCodigo.setEditable(false);
+
+        final JTextField campoNome = new JTextField(curso.getNome());
+        campoNome.setPreferredSize(new Dimension(150, 20));
+        campoNome.setEditable(false);
+
+        final JTextField campoCarga = new JTextField(String.valueOf(curso.getCargaHoraria()));
+        campoCarga.setPreferredSize(new Dimension(90, 20));
+        campoCarga.setEditable(false);
+
+        final JTextField campoProfessor = new JTextField(curso.getProfessor());
+        campoProfessor.setPreferredSize(new Dimension(100, 20));
+        campoProfessor.setEditable(false);
+
+        JButton btnRemover = new JButton("Remover");
+        btnRemover.setPreferredSize(new Dimension(80, 20));
 
         JButton btnEditar = new JButton("Editar");
-        JButton btnRemover = new JButton("Remover");
+        btnEditar.setPreferredSize(new Dimension(80, 20));
 
-        // Botão Editar
-        btnEditar.addActionListener((ActionEvent e) -> {
+        // Ações
+        btnEditar.addActionListener(e -> {
             Curso cursoOriginal = listaCursos.get(index);
             EditarCurso dialog = new EditarCurso(TelaCursos.this, cursoOriginal);
             dialog.setVisible(true);
-            
+
             if (dialog.foiAlterado()) {
                 Curso alterado = dialog.getCursoEditado();
-                listaCursos.set(index, alterado); // substitui o curso original
+                listaCursos.set(index, alterado);
                 atualizarTela();
             }
         });
 
-        // Botão Remover
-        btnRemover.addActionListener((ActionEvent e) -> {
+        btnRemover.addActionListener(e -> {
             Curso cursoParaRemover = listaCursos.get(index);
             RemoverCurso dialog = new RemoverCurso(TelaCursos.this, cursoParaRemover);
             dialog.setVisible(true);
-            
+
             if (dialog.foiConfirmado()) {
                 listaCursos.remove(index);
                 atualizarTela();
             }
         });
 
-        linha.add(new JLabel("Código:"));
+        // Adicionar componentes
         linha.add(campoCodigo);
-        linha.add(new JLabel("Nome:"));
         linha.add(campoNome);
-        linha.add(new JLabel("Carga:"));
         linha.add(campoCarga);
-        linha.add(new JLabel("Professor:"));
         linha.add(campoProfessor);
-        linha.add(btnEditar);
         linha.add(btnRemover);
+        linha.add(btnEditar);
 
         painelPrincipal.add(linha);
     }
@@ -132,6 +189,7 @@ private void atualizarTela() {
     painelPrincipal.revalidate();
     painelPrincipal.repaint();
 }
+
 
 
     public static void main(String[] args) {
