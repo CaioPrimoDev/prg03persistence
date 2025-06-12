@@ -1,0 +1,15 @@
+br\com\ifba\persistence\view\EditarCurso$1.class
+br\com\ifba\persistence\view\PesquisarCurso$2.class
+br\com\ifba\persistence\view\PesquisarCurso.class
+br\com\ifba\persistence\view\EditarCurso$2.class
+br\com\ifba\persistence\view\PesquisarCurso$1.class
+br\com\ifba\persistence\view\TelaCursos.class
+br\com\ifba\persistence\view\AdicionarCurso$2.class
+br\com\ifba\persistence\view\RemoverCurso.class
+br\com\ifba\persistence\view\RemoverCurso$1.class
+br\com\ifba\persistence\entity\Curso.class
+br\com\ifba\persistence\view\AdicionarCurso$1.class
+br\com\ifba\persistence\view\EditarCurso.class
+br\com\ifba\persistence\view\AdicionarCurso.class
+br\com\ifba\persistence\view\RemoverCurso$2.class
+br\com\ifba\persistence\app\Main.class
