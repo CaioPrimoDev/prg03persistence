@@ -29,7 +29,6 @@ public class EditarCurso extends JDialog {
         setLocationRelativeTo(parent);
         setLayout(new GridLayout(5, 2, 10, 10));
 
-        // Campos preenchidos com dados do curso
         add(new JLabel("Código:"));
         campoCodigo = new JTextField(String.valueOf(cursoOriginal.getCodigo()));
         campoCodigo.setEditable(false);
@@ -47,13 +46,11 @@ public class EditarCurso extends JDialog {
         campoProfessor = new JTextField(cursoOriginal.getProfessor());
         add(campoProfessor);
 
-        // Botões
         JButton btnSalvar = new JButton("Salvar");
         JButton btnCancelar = new JButton("Cancelar");
         add(btnSalvar);
         add(btnCancelar);
 
-        // Ação do botão Salvar
         btnSalvar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -73,10 +70,9 @@ public class EditarCurso extends JDialog {
             }
         });
 
-        // Ação do botão Cancelar
         btnCancelar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                dispose(); // fecha sem alterar
+                dispose();
             }
         });
     }
@@ -89,4 +85,5 @@ public class EditarCurso extends JDialog {
         return cursoEditado;
     }
 }
+
 

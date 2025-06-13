@@ -4,14 +4,15 @@
  */
 package br.com.ifba.persistence.view;
 
-/**
- *
- * @author User
- */
 import br.com.ifba.persistence.entity.Curso;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+
+/**
+ *
+ * @author User
+ */
 
 public class AdicionarCurso extends JDialog {
     private JTextField campoNome;
@@ -27,7 +28,7 @@ public class AdicionarCurso extends JDialog {
 
         add(new JLabel("Código:"));
         JTextField campoCodigo = new JTextField(String.valueOf(proximoCodigo));
-        campoCodigo.setEditable(false); // Gerado automaticamente
+        campoCodigo.setEditable(false);
         add(campoCodigo);
 
         add(new JLabel("Nome:"));
@@ -45,21 +46,28 @@ public class AdicionarCurso extends JDialog {
         JButton btnSalvar = new JButton("Salvar");
         JButton btnCancelar = new JButton("Cancelar");
 
-        btnSalvar.addActionListener(e -> {
-            try {
-                String nome = campoNome.getText();
-                int carga = Integer.parseInt(campoCarga.getText());
-                String professor = campoProfessor.getText();
+        btnSalvar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String nome = campoNome.getText();
+                    int carga = Integer.parseInt(campoCarga.getText());
+                    String professor = campoProfessor.getText();
 
-                curso = new Curso(proximoCodigo, nome, carga, professor);
-                salvo = true;
-                dispose();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Carga Horária deve ser numérica.");
+                    curso = new Curso(proximoCodigo, nome, carga, professor);
+                    salvo = true;
+                    dispose();
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(AdicionarCurso.this,
+                        "Carga Horária deve ser numérica.");
+                }
             }
         });
 
-        btnCancelar.addActionListener(e -> dispose());
+        btnCancelar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
 
         add(btnSalvar);
         add(btnCancelar);
@@ -73,4 +81,3 @@ public class AdicionarCurso extends JDialog {
         return curso;
     }
 }
-

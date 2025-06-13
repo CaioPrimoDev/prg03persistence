@@ -4,16 +4,17 @@
  */
 package br.com.ifba.persistence.view;
 
-/**
- *
- * @author User
- */
 import br.com.ifba.persistence.entity.Curso;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import java.util.ArrayList;
+
+/**
+ *
+ * @author User
+ */
 
 public class PesquisarCurso extends JDialog {
 
@@ -29,7 +30,6 @@ public class PesquisarCurso extends JDialog {
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10));
 
-        // Campo de busca
         JPanel painelBusca = new JPanel();
         painelBusca.setLayout(new FlowLayout());
 
@@ -41,26 +41,22 @@ public class PesquisarCurso extends JDialog {
 
         add(painelBusca, BorderLayout.NORTH);
 
-        // Área de resultados
         areaResultados = new JTextArea();
         areaResultados.setEditable(false);
         JScrollPane scroll = new JScrollPane(areaResultados);
         add(scroll, BorderLayout.CENTER);
 
-        // Botão fechar
         JButton btnFechar = new JButton("Fechar");
         JPanel painelFechar = new JPanel();
         painelFechar.add(btnFechar);
         add(painelFechar, BorderLayout.SOUTH);
 
-        // Ação do botão Buscar
         btnBuscar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 buscarCurso();
             }
         });
 
-        // Ação do botão Fechar
         btnFechar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
@@ -87,7 +83,7 @@ public class PesquisarCurso extends JDialog {
                         encontrados.add(c);
                     }
                 } catch (NumberFormatException ex) {
-                    // ignorar se não for número
+                    // Ignorado
                 }
             }
         }
@@ -97,13 +93,14 @@ public class PesquisarCurso extends JDialog {
         } else {
             StringBuilder sb = new StringBuilder();
             for (Curso c : encontrados) {
-                sb.append("Código: ").append(c.getCodigo()).append("\n")
-                  .append("Nome: ").append(c.getNome()).append("\n")
-                  .append("Carga Horária: ").append(c.getCargaHoraria()).append("\n")
-                  .append("Professor: ").append(c.getProfessor()).append("\n")
-                  .append("-----\n");
+                sb.append("Código: ").append(c.getCodigo()).append("\n");
+                sb.append("Nome: ").append(c.getNome()).append("\n");
+                sb.append("Carga Horária: ").append(c.getCargaHoraria()).append("\n");
+                sb.append("Professor: ").append(c.getProfessor()).append("\n");
+                sb.append("-----\n");
             }
             areaResultados.setText(sb.toString());
         }
     }
 }
+

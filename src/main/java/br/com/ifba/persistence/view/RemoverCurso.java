@@ -4,14 +4,15 @@
  */
 package br.com.ifba.persistence.view;
 
-/**
- *
- * @author User
- */
 import br.com.ifba.persistence.entity.Curso;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+
+/**
+ *
+ * @author User
+ */
 
 public class RemoverCurso extends JDialog {
 
@@ -23,7 +24,6 @@ public class RemoverCurso extends JDialog {
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10));
 
-        // Mensagem
         JLabel lblMensagem = new JLabel("<html>Deseja remover o seguinte curso?<br><br>" +
                 "Código: " + curso.getCodigo() + "<br>" +
                 "Nome: " + curso.getNome() + "<br>" +
@@ -31,7 +31,6 @@ public class RemoverCurso extends JDialog {
         lblMensagem.setHorizontalAlignment(SwingConstants.CENTER);
         add(lblMensagem, BorderLayout.CENTER);
 
-        // Botões
         JPanel painelBotoes = new JPanel();
         JButton btnSim = new JButton("Sim");
         JButton btnNao = new JButton("Não");
@@ -39,7 +38,6 @@ public class RemoverCurso extends JDialog {
         painelBotoes.add(btnNao);
         add(painelBotoes, BorderLayout.SOUTH);
 
-        // Ações
         btnSim.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 confirmado = true;
@@ -49,7 +47,7 @@ public class RemoverCurso extends JDialog {
 
         btnNao.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                dispose(); // apenas fecha
+                dispose();
             }
         });
     }
@@ -58,4 +56,3 @@ public class RemoverCurso extends JDialog {
         return confirmado;
     }
 }
-
