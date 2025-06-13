@@ -4,15 +4,28 @@
 
 package br.com.ifba.persistence.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+//import jakarta.persistence.GeneratedValue;
+//import jakarta.persistence.GenerationType;
+
 /**
  *
  * @author User
  */
+
+@Entity
 public class Curso {
+    
+    @Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY) // Só quando criar as operações
     private int codigo;
     private String nome;
     private int cargaHoraria;
     private String professor;
+    
+    // Construtor padrão (obrigatório para JPA)
+    public Curso() {}
 
     public Curso(int codigo, String nome, int cargaHoraria, String professor) {
         this.codigo = codigo;
