@@ -32,6 +32,7 @@ public class EditarCurso extends JDialog {
         // Campos preenchidos com dados do curso
         add(new JLabel("Código:"));
         campoCodigo = new JTextField(String.valueOf(cursoOriginal.getCodigo()));
+        campoCodigo.setEditable(false);
         add(campoCodigo);
 
         add(new JLabel("Nome:"));

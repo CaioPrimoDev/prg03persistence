@@ -12,6 +12,7 @@ import br.com.ifba.persistence.entity.Curso;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 import java.util.*;
 
 public class TelaCursos extends JFrame {
@@ -104,10 +105,10 @@ private void atualizarTela() {
     JLabel lblProfessor = new JLabel("Professor");
     lblProfessor.setPreferredSize(new Dimension(100, 20));
 
-    JLabel lblRemover = new JLabel("Remover");
+    JLabel lblRemover = new JLabel("    Remover");
     lblRemover.setPreferredSize(new Dimension(80, 20));
 
-    JLabel lblEditar = new JLabel("Editar");
+    JLabel lblEditar = new JLabel("      Editar");
     lblEditar.setPreferredSize(new Dimension(80, 20));
 
     cabecalho.add(lblCodigo);
@@ -145,11 +146,13 @@ private void atualizarTela() {
         campoProfessor.setPreferredSize(new Dimension(100, 20));
         campoProfessor.setEditable(false);
 
-        JButton btnRemover = new JButton("Remover");
+        // Atribui icones para os botões Remover e Editar
+        JButton btnRemover = criarBotaoComIcone("/br/com/ifba/persistence/images/removeIcon.png", "Remover");
         btnRemover.setPreferredSize(new Dimension(80, 20));
-
-        JButton btnEditar = new JButton("Editar");
+        
+        JButton btnEditar = criarBotaoComIcone("/br/com/ifba/persistence/images/editIcon.png", "Editar");
         btnEditar.setPreferredSize(new Dimension(80, 20));
+
 
         // Ações
         btnEditar.addActionListener(e -> {
@@ -195,5 +198,23 @@ private void atualizarTela() {
     public static void main(String[] args) {
         new TelaCursos();
     }
+    
+    private JButton criarBotaoComIcone(String caminhoIcone, String tooltip) {
+        JButton botao = new JButton();
+        botao.setToolTipText(tooltip);
+
+        URL imageUrl = getClass().getResource(caminhoIcone);
+        if (imageUrl != null) {
+            ImageIcon icon = new ImageIcon(imageUrl);
+            botao.setIcon(icon);
+        } else {
+            System.err.println("⚠️ Imagem não encontrada: " + caminhoIcone);
+            botao.setText(tooltip);
+    }
+
+    return botao;
+}
+
+
 }
 
