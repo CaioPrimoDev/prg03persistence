@@ -4,6 +4,7 @@
  */
 package br.com.ifba.persistence.view;
 
+import br.com.ifba.persistence.dao.CursoDAO;
 import br.com.ifba.persistence.entity.Curso;
 import javax.swing.*;
 import java.awt.*;
@@ -15,69 +16,54 @@ import java.awt.event.*;
  */
 
 public class AdicionarCurso extends JDialog {
+
     private JTextField campoNome;
-    private JTextField campoCarga;
+    private JTextField campoCargaHoraria;
     private JTextField campoProfessor;
-    private Curso curso;
-    private boolean salvo = false;
+    private JButton btnSalvar;
+    private CursoDAO cursoDAO;
+    private TelaCursos telaPrincipal;
 
-    public AdicionarCurso(JFrame parent, int proximoCodigo) {
+    public AdicionarCurso(JFrame parent, CursoDAO cursoDAO) {
         super(parent, "Adicionar Curso", true);
-        setSize(300, 250);
-        setLayout(new GridLayout(5, 2));
+        this.cursoDAO = cursoDAO;
+        this.telaPrincipal = (TelaCursos) parent;
 
-        add(new JLabel("Código:"));
-        JTextField campoCodigo = new JTextField(String.valueOf(proximoCodigo));
-        campoCodigo.setEditable(false);
-        add(campoCodigo);
+        setSize(300, 200);
+        setLocationRelativeTo(parent);
+        setLayout(new GridLayout(4, 2, 5, 5));
 
         add(new JLabel("Nome:"));
         campoNome = new JTextField();
         add(campoNome);
 
         add(new JLabel("Carga Horária:"));
-        campoCarga = new JTextField();
-        add(campoCarga);
+        campoCargaHoraria = new JTextField();
+        add(campoCargaHoraria);
 
         add(new JLabel("Professor:"));
         campoProfessor = new JTextField();
         add(campoProfessor);
 
-        JButton btnSalvar = new JButton("Salvar");
-        JButton btnCancelar = new JButton("Cancelar");
-
-        btnSalvar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    String nome = campoNome.getText();
-                    int carga = Integer.parseInt(campoCarga.getText());
-                    String professor = campoProfessor.getText();
-
-                    curso = new Curso(proximoCodigo, nome, carga, professor);
-                    salvo = true;
-                    dispose();
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(AdicionarCurso.this,
-                        "Carga Horária deve ser numérica.");
-                }
-            }
-        });
-
-        btnCancelar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
-
+        btnSalvar = new JButton("Salvar");
+        btnSalvar.addActionListener(e -> salvarCurso());
         add(btnSalvar);
-        add(btnCancelar);
+
+        setVisible(true);
     }
 
-    public boolean foiSalvo() {
-        return salvo;
-    }
+    private void salvarCurso() {
+        try {
+            String nome = campoNome.getText();
+            int carga = Integer.parseInt(campoCargaHoraria.getText());
+            String prof = campoProfessor.getText();
 
-    public Curso getCurso() {
-        return curso;
+            Curso curso = new Curso(nome, carga, prof);
+            cursoDAO.salvar(curso);
+            telaPrincipal.carregarCursosDoBanco();
+            dispose();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Carga horária inválida.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

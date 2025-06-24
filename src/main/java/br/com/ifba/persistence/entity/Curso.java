@@ -4,8 +4,13 @@
 
 package br.com.ifba.persistence.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.util.Objects;
 //import jakarta.persistence.GeneratedValue;
 //import jakarta.persistence.GenerationType;
 
@@ -15,26 +20,31 @@ import jakarta.persistence.Id;
  */
 
 @Entity
+@Table(name = "curso")
 public class Curso {
-    
+
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY) // Só quando criar as operações
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int codigo;
+
+    @Column(name = "nome", nullable = false, length = 100)
     private String nome;
+
+    @Column(name = "carga_horaria", nullable = false)
     private int cargaHoraria;
+
+    @Column(name = "professor", nullable = false, length = 100)
     private String professor;
-    
-    // Construtor padrão (obrigatório para JPA)
+
     public Curso() {}
 
-    public Curso(int codigo, String nome, int cargaHoraria, String professor) {
-        this.codigo = codigo;
+    public Curso(String nome, int cargaHoraria, String professor) {
         this.nome = nome;
         this.cargaHoraria = cargaHoraria;
         this.professor = professor;
     }
 
-    // Getters e Setters
     public int getCodigo() { return codigo; }
     public String getNome() { return nome; }
     public int getCargaHoraria() { return cargaHoraria; }
@@ -44,4 +54,27 @@ public class Curso {
     public void setNome(String nome) { this.nome = nome; }
     public void setCargaHoraria(int cargaHoraria) { this.cargaHoraria = cargaHoraria; }
     public void setProfessor(String professor) { this.professor = professor; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Curso curso = (Curso) o;
+        return codigo == curso.codigo;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(codigo);
+    }
+
+    @Override
+    public String toString() {
+        return "Curso{" +
+               "codigo=" + codigo +
+               ", nome='" + nome + '\'' +
+               ", cargaHoraria=" + cargaHoraria +
+               ", professor='" + professor + '\'' +
+               '}';
+    }
 }

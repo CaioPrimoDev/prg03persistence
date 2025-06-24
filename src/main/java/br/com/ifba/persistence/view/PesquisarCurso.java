@@ -5,11 +5,14 @@
 package br.com.ifba.persistence.view;
 
 import br.com.ifba.persistence.entity.Curso;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.TypedQuery;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  *
@@ -18,88 +21,55 @@ import java.util.ArrayList;
 
 public class PesquisarCurso extends JDialog {
 
-    private JTextField campoBusca;
-    private JTextArea areaResultados;
-    private List<Curso> cursos;
+    private JTextField campoPesquisa;
+    private JTextArea resultadoArea;
+    private JButton btnPesquisar;
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("prg03persistence");
 
-    public PesquisarCurso(JFrame parent, List<Curso> cursosDisponiveis) {
+    public PesquisarCurso(JFrame parent) {
         super(parent, "Pesquisar Curso", true);
-        this.cursos = cursosDisponiveis;
-
-        setSize(500, 400);
+        setSize(400, 300);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10));
 
-        JPanel painelBusca = new JPanel();
-        painelBusca.setLayout(new FlowLayout());
+        JPanel painelTopo = new JPanel(new BorderLayout(5, 5));
+        campoPesquisa = new JTextField();
+        btnPesquisar = new JButton("Pesquisar");
+        painelTopo.add(new JLabel("Nome do curso:"), BorderLayout.WEST);
+        painelTopo.add(campoPesquisa, BorderLayout.CENTER);
+        painelTopo.add(btnPesquisar, BorderLayout.EAST);
 
-        painelBusca.add(new JLabel("Digite o nome ou código:"));
-        campoBusca = new JTextField(20);
-        JButton btnBuscar = new JButton("Buscar");
-        painelBusca.add(campoBusca);
-        painelBusca.add(btnBuscar);
+        resultadoArea = new JTextArea();
+        resultadoArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(resultadoArea);
 
-        add(painelBusca, BorderLayout.NORTH);
+        add(painelTopo, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
 
-        areaResultados = new JTextArea();
-        areaResultados.setEditable(false);
-        JScrollPane scroll = new JScrollPane(areaResultados);
-        add(scroll, BorderLayout.CENTER);
-
-        JButton btnFechar = new JButton("Fechar");
-        JPanel painelFechar = new JPanel();
-        painelFechar.add(btnFechar);
-        add(painelFechar, BorderLayout.SOUTH);
-
-        btnBuscar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                buscarCurso();
-            }
-        });
-
-        btnFechar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
+        btnPesquisar.addActionListener(e -> buscarCursos());
+        setVisible(true);
     }
 
-    private void buscarCurso() {
-        String termo = campoBusca.getText().trim().toLowerCase();
-        if (termo.isEmpty()) {
-            areaResultados.setText("Digite um nome ou código para buscar.");
-            return;
-        }
+    private void buscarCursos() {
+        String termo = campoPesquisa.getText();
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Curso> query = em.createQuery(
+                "SELECT c FROM Curso c WHERE c.nome LIKE :nome", Curso.class);
+            query.setParameter("nome", "%" + termo + "%");
+            List<Curso> resultados = query.getResultList();
 
-        List<Curso> encontrados = new ArrayList<>();
-
-        for (Curso c : cursos) {
-            if (c.getNome().toLowerCase().contains(termo)) {
-                encontrados.add(c);
+            resultadoArea.setText("");
+            if (resultados.isEmpty()) {
+                resultadoArea.setText("Nenhum curso encontrado.");
             } else {
-                try {
-                    int codigoBusca = Integer.parseInt(termo);
-                    if (c.getCodigo() == codigoBusca) {
-                        encontrados.add(c);
-                    }
-                } catch (NumberFormatException ex) {
-                    // Ignorado
+                for (Curso c : resultados) {
+                    resultadoArea.append("[" + c.getCodigo() + "] " + c.getNome()
+                            + " - " + c.getCargaHoraria() + "h - Prof: " + c.getProfessor() + "\n");
                 }
             }
-        }
-
-        if (encontrados.isEmpty()) {
-            areaResultados.setText("Nenhum curso encontrado.");
-        } else {
-            StringBuilder sb = new StringBuilder();
-            for (Curso c : encontrados) {
-                sb.append("Código: ").append(c.getCodigo()).append("\n");
-                sb.append("Nome: ").append(c.getNome()).append("\n");
-                sb.append("Carga Horária: ").append(c.getCargaHoraria()).append("\n");
-                sb.append("Professor: ").append(c.getProfessor()).append("\n");
-                sb.append("-----\n");
-            }
-            areaResultados.setText(sb.toString());
+        } finally {
+            em.close();
         }
     }
 }
