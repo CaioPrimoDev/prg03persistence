@@ -52,11 +52,21 @@ public class TelaCursos extends JFrame {
 
         for (Curso curso : cursos) {
             JPanel linha = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            linha.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
 
             JLabel label = new JLabel("[" + curso.getCodigo() + "] " + curso.getNome()
                     + " - " + curso.getCargaHoraria() + "h - Prof: " + curso.getProfessor());
-            JButton btnEditar = new JButton("Editar");
-            JButton btnRemover = new JButton("Remover");
+            
+            // fixa um tamanho para o JLabel
+            label.setPreferredSize(new Dimension(280, 20));
+            
+            // Cria os botões
+            JButton btnEditar = new JButton();
+            JButton btnRemover = new JButton();
+            
+            // Aplica os icones nos botões
+            btnEditar.setIcon(new ImageIcon(getClass().getResource("/br/com/ifba/persistence/images/editIcon.png")));
+            btnRemover.setIcon(new ImageIcon(getClass().getResource("/br/com/ifba/persistence/images/removeIcon.png")));
 
             btnRemover.addActionListener(e -> {
                 int confirm = JOptionPane.showConfirmDialog(null,
@@ -83,6 +93,7 @@ public class TelaCursos extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new TelaCursos());
     }
-}
+} 
+
 
 
