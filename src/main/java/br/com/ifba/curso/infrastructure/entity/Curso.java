@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
 
-package br.com.ifba.persistence.entity;
+package br.com.ifba.curso.infrastructure.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

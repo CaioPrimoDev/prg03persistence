@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package br.com.ifba.persistence.view;
+package br.com.ifba.curso.view;
 
-import br.com.ifba.persistence.dao.CursoDAO;
-import br.com.ifba.persistence.entity.Curso;
+import br.com.ifba.curso.infrastructure.dao.CursoDAO;
+import br.com.ifba.curso.infrastructure.entity.Curso;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -15,55 +15,60 @@ import java.awt.event.*;
  * @author User
  */
 
-public class AdicionarCurso extends JDialog {
+public class EditarCurso extends JDialog {
 
     private JTextField campoNome;
     private JTextField campoCargaHoraria;
     private JTextField campoProfessor;
     private JButton btnSalvar;
+    private Curso curso;
     private CursoDAO cursoDAO;
-    private TelaCursos telaPrincipal;
+    private TelaCursosUI telaPrincipal;
 
-    public AdicionarCurso(JFrame parent, CursoDAO cursoDAO) {
-        super(parent, "Adicionar Curso", true);
+    public EditarCurso(JFrame parent, Curso curso, CursoDAO cursoDAO) {
+        super(parent, "Editar Curso", true);
+        this.curso = curso;
         this.cursoDAO = cursoDAO;
-        this.telaPrincipal = (TelaCursos) parent;
+        this.telaPrincipal = (TelaCursosUI) parent;
 
         setSize(300, 200);
         setLocationRelativeTo(parent);
         setLayout(new GridLayout(4, 2, 5, 5));
 
         add(new JLabel("Nome:"));
-        campoNome = new JTextField();
+        campoNome = new JTextField(curso.getNome());
         add(campoNome);
 
         add(new JLabel("Carga Horária:"));
-        campoCargaHoraria = new JTextField();
+        campoCargaHoraria = new JTextField(String.valueOf(curso.getCargaHoraria()));
         add(campoCargaHoraria);
 
         add(new JLabel("Professor:"));
-        campoProfessor = new JTextField();
+        campoProfessor = new JTextField(curso.getProfessor());
         add(campoProfessor);
 
         btnSalvar = new JButton("Salvar");
-        btnSalvar.addActionListener(e -> salvarCurso());
+        btnSalvar.addActionListener(e -> salvarAlteracoes());
         add(btnSalvar);
 
         setVisible(true);
     }
 
-    private void salvarCurso() {
+    private void salvarAlteracoes() {
         try {
-            String nome = campoNome.getText();
-            int carga = Integer.parseInt(campoCargaHoraria.getText());
-            String prof = campoProfessor.getText();
+            curso.setNome(campoNome.getText());
+            curso.setCargaHoraria(Integer.parseInt(campoCargaHoraria.getText()));
+            curso.setProfessor(campoProfessor.getText());
 
-            Curso curso = new Curso(nome, carga, prof);
-            cursoDAO.salvar(curso);
-            telaPrincipal.carregarCursosDoBanco();
+            cursoDAO.atualizar(curso);
+            telaPrincipal.carregarCursos();
+            System.out.println("\n\nCurso editado com sucesso, fechando janela...\n\n");
             dispose();
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Carga horária inválida.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
-}
+} 
+
+
+

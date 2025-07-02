@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package br.com.ifba.persistence.view;
+package br.com.ifba.curso.view;
 
-import br.com.ifba.persistence.entity.Curso;
+import br.com.ifba.curso.infrastructure.entity.Curso;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
