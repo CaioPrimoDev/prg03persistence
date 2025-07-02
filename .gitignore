@@ -1,0 +1,16 @@
+
+# Arquivos de compilação
+*.class
+*.jar
+*.lst
+
+# Diretórios de build e artefatos
+/build/
+/target/
+/classes/
+/dist/
+/out/
+
+# Arquivos do NetBeans
+nbproject/private/
+nbbuild/
