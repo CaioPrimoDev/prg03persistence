@@ -4,23 +4,52 @@
  */
 package br.com.ifba.curso.view;
 
+import br.com.ifba.curso.infrastructure.dao.CursoDAO;
 import br.com.ifba.curso.infrastructure.entity.Curso;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 /**
  *
  * @author User
  */
 public class EditarCursoUI extends javax.swing.JDialog {
+    private Curso curso;
+    private CursoDAO cursoDAO;
+    private TelaCursosUI telaPrincipal;
     
     
 
     /**
      * Creates new form AdicionarCursoUI
      */
-    public EditarCursoUI(java.awt.Frame parent, boolean modal) {
+    public EditarCursoUI(java.awt.Frame parent, Curso curso, CursoDAO cursoDAO, boolean modal) {
         super(parent, modal);
+        this.curso = curso;
+        this.cursoDAO = cursoDAO;
+        this.telaPrincipal = (TelaCursosUI) parent;
         initComponents();
+        
+        txtNomeAnt.setText(curso.getNome());
+        txtCgAnt.setText(String.valueOf(curso.getCargaHoraria()));
+        txtProfessorAnt.setText(curso.getProfessor());
+        
+        setVisible(true);
+    }
+    
+    private void salvarAlteracoes() {
+        try {
+            curso.setNome(txtNomeProx.getText());
+            curso.setCargaHoraria(Integer.parseInt(txtCgProx.getText()));
+            curso.setProfessor(txtProfessorProx.getText());
+
+            cursoDAO.atualizar(curso);
+            telaPrincipal.carregarCursos();
+            System.out.println("\n\nCurso editado com sucesso, fechando janela...\n\n");
+            dispose();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Carga horária inválida.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -46,6 +75,7 @@ public class EditarCursoUI extends javax.swing.JDialog {
         txtCgProx = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("EDITAR CURSO");
@@ -53,7 +83,7 @@ public class EditarCursoUI extends javax.swing.JDialog {
 
         jLabel1.setText("Nome");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 40, 30));
-        getContentPane().add(txtProfessorProx, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 140, 80, 30));
+        getContentPane().add(txtProfessorProx, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 140, 100, 30));
 
         jLabel2.setText("Carga Horaria ");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 80, 30));
@@ -64,30 +94,30 @@ public class EditarCursoUI extends javax.swing.JDialog {
                 txtCgAntActionPerformed(evt);
             }
         });
-        getContentPane().add(txtCgAnt, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 80, 80, 30));
+        getContentPane().add(txtCgAnt, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 80, 90, 30));
 
         jLabel3.setText("Professor");
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 50, 30));
 
         txtProfessorAnt.setEditable(false);
-        getContentPane().add(txtProfessorAnt, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 140, 80, 30));
+        getContentPane().add(txtProfessorAnt, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 140, 90, 30));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel4.setText(">");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 140, 20, -1));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 140, 20, -1));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel5.setText(">");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 20, 20, -1));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 20, 20, -1));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel6.setText(">");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 80, 20, -1));
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 80, 20, -1));
 
         txtNomeAnt.setEditable(false);
-        getContentPane().add(txtNomeAnt, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 80, 30));
-        getContentPane().add(txtNomeProx, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, 80, 30));
-        getContentPane().add(txtCgProx, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, 80, 30));
+        getContentPane().add(txtNomeAnt, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 90, 30));
+        getContentPane().add(txtNomeProx, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 20, 100, 30));
+        getContentPane().add(txtCgProx, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, 100, 30));
 
         jButton1.setText("SALVAR");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -95,62 +125,20 @@ public class EditarCursoUI extends javax.swing.JDialog {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 200, 120, 30));
-        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 240, 40, 20));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 200, 120, 30));
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 220, 40, 20));
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 230, 50, 40));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        salvarAlteracoes();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txtCgAntActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCgAntActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCgAntActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EditarCursoUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EditarCursoUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EditarCursoUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EditarCursoUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                EditarCursoUI dialog = new EditarCursoUI(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -161,6 +149,7 @@ public class EditarCursoUI extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JTextField txtCgAnt;
     private javax.swing.JTextField txtCgProx;
     private javax.swing.JTextField txtNomeAnt;

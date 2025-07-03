@@ -25,6 +25,8 @@ public class AdicionarCursoUI extends javax.swing.JDialog {
         
         this.cursoDAO = cursoDAO;
         this.telaPrincipal = (TelaCursosUI) parent;
+        
+        setVisible(true);
     }
     
     private void salvarCurso() {

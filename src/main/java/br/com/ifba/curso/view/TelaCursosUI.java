@@ -68,7 +68,7 @@ public class TelaCursosUI extends javax.swing.JFrame {
         btnRemover.setIcon(new ImageIcon(getClass().getResource("/br/com/ifba/persistence/images/removeIcon.png")));
         
         btnEditar.addActionListener(e -> {
-            new EditarCurso(this, c, dao);
+            new EditarCursoUI(this, c, dao, true);
             carregarCursos();
         });
         
@@ -157,8 +157,7 @@ public class TelaCursosUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
-        AdicionarCursoUI dialog = new AdicionarCursoUI(this, true, dao);
-        dialog.setVisible(true);
+        new AdicionarCursoUI(this, true, dao);
         carregarCursos();
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
