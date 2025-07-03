@@ -6,15 +6,10 @@ package br.com.ifba.curso.view;
 
 import br.com.ifba.curso.infrastructure.dao.CursoDAO;
 import br.com.ifba.curso.infrastructure.entity.Curso;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import java.awt.Component;
 import java.util.List;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 /**
  *
@@ -32,65 +27,45 @@ public class TelaCursosUI extends javax.swing.JFrame {
         // Define layout vertical para o painel interno
         painelInternoCursos.setLayout(new BoxLayout(painelInternoCursos, BoxLayout.Y_AXIS));
         
+        // força o painel de linhas a usar alinhamento à esquerda
+        painelInternoCursos.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
         carregarCursos();
     }
     
     public void carregarCursos() {
-        // Limpa o JPainel que exibe os cursos
-        painelInternoCursos.removeAll();
-        
-        List<Curso> cursos = dao.listarTodos();
-        
-        for (Curso c : cursos) {
-            painelInternoCursos.add(criarLinha(c));
-        }
-        painelInternoCursos.revalidate();
-        painelInternoCursos.repaint();
-    }
-    
-    private JPanel criarLinha(Curso c) {
-        JPanel linha = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        linha.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        
-        JLabel lblInfo = new JLabel("[" + c.getCodigo() + "] " + c.getNome()
-                    + " - " + c.getCargaHoraria() + "h - Prof: " + c.getProfessor());
-        linha.add(lblInfo);
-        
-        // fixa um tamanho para o JLabel
-        lblInfo.setPreferredSize(new Dimension(280, 20));
-        
-        // Cria os botões por linha
-        JButton btnRemover = new JButton();
-        JButton btnEditar = new JButton();
-        
-        // Adicionar os icones correspondentes
-        btnEditar.setIcon(new ImageIcon(getClass().getResource("/br/com/ifba/persistence/images/editIcon.png")));
-        btnRemover.setIcon(new ImageIcon(getClass().getResource("/br/com/ifba/persistence/images/removeIcon.png")));
-        
-        btnEditar.addActionListener(e -> {
+    painelInternoCursos.removeAll();
+
+    List<Curso> cursos = dao.listarTodos();
+
+    for (Curso c : cursos) {
+        LinhaCursoPanel linha = new LinhaCursoPanel();
+        linha.setCurso(c); // define os dados visuais
+        linha.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // ação de editar
+        linha.adicionarAcaoEditar(e -> {
             new EditarCursoUI(this, c, dao, true);
             carregarCursos();
         });
-        
-        btnRemover.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(null,
+
+        // ação de remover
+        linha.adicionarAcaoRemover(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this,
                     "Tem certeza que deseja remover o curso?",
                     "Confirmação", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 dao.remover(c);
-                carregarCursos(); // Atualiza a lista após remover
-            }   
+                carregarCursos();
+            }
         });
-        
-        linha.add(lblInfo);
-        linha.add(btnEditar);
-        linha.add(btnRemover);
-        
-        return linha;
-    }
-    
-    
 
+        painelInternoCursos.add(linha);
+    }
+
+        painelInternoCursos.revalidate();
+        painelInternoCursos.repaint();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
