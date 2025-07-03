@@ -157,7 +157,8 @@ public class TelaCursosUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
-        new AdicionarCurso(this, dao);
+        AdicionarCursoUI dialog = new AdicionarCursoUI(this, true, dao);
+        dialog.setVisible(true);
         carregarCursos();
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
