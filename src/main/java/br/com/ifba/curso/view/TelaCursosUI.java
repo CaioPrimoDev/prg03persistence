@@ -162,7 +162,7 @@ public class TelaCursosUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-        new PesquisarCurso(this);
+        new PesquisarCursoUI(this, true);
         carregarCursos();
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
