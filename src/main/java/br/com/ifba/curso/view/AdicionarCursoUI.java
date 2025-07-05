@@ -30,10 +30,19 @@ public class AdicionarCursoUI extends javax.swing.JDialog {
     }
     
     private void salvarCurso() {
+        
+            //trim() garante que " " seja "", tornando possivel detectar vazio
+            String nome = txtNome.getText().trim();
+            String cargaStr = txtCargaHoraria.getText().trim();
+            String prof = txtProfessor.getText().trim();
+            
+            if (nome.isEmpty() || cargaStr.isEmpty() || prof.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "O sistema nao permite valores vazios!", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
         try {
-            String nome = txtNome.getText();
-            int carga = Integer.parseInt(txtCargaHoraria.getText());
-            String prof = txtProfessor.getText();
+            int carga = Integer.parseInt(cargaStr);
 
             Curso curso = new Curso(nome, carga, prof);
             cursoDAO.salvar(curso);

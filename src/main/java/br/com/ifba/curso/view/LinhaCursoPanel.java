@@ -28,15 +28,18 @@ public class LinhaCursoPanel extends javax.swing.JPanel {
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
         // (Re) define tamanhos preferidos pequenos, se quiser
-        lblCodigo .setPreferredSize(new Dimension(40, 20));
+        lblCodigo .setPreferredSize(new Dimension(60, 20));
         lblNome   .setPreferredSize(new Dimension(120,20));
         lblCargaH .setPreferredSize(new Dimension(40, 20));
-        lblProfessor.setPreferredSize(new Dimension(80,20));
+        lblProfessor.setPreferredSize(new Dimension(140, 20)); // antes era 80
+        btnEditar.setPreferredSize(new Dimension(50, 25));
+        btnRemover.setPreferredSize(new Dimension(60, 25));
+
         
         // trava a altura do painel exatamente na altura preferida:
         Dimension d = getPreferredSize();
         setPreferredSize( new Dimension(d.width, d.height) );
-        setMaximumSize(   new Dimension(Integer.MAX_VALUE, d.height) );
+        setMaximumSize(   new Dimension(d.width, d.height) );
 
     }
 
@@ -44,7 +47,7 @@ public class LinhaCursoPanel extends javax.swing.JPanel {
     public void setCurso(Curso c) {
     lblCodigo .setText("[" + c.getCodigo() + "]");
     lblNome   .setText(c.getNome());
-    lblCargaH  .setText(c.getCargaHoraria() + "h");
+    lblCargaH  .setText(c.getCargaHoraria() + "");
     lblProfessor.setText(c.getProfessor());
     }
 

@@ -7,9 +7,12 @@ package br.com.ifba.curso.view;
 import br.com.ifba.curso.infrastructure.dao.CursoDAO;
 import br.com.ifba.curso.infrastructure.entity.Curso;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -24,11 +27,28 @@ public class TelaCursosUI extends javax.swing.JFrame {
     public TelaCursosUI() {
         initComponents();
         
+        scrollCursos.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+        
         // Define layout vertical para o painel interno
         painelInternoCursos.setLayout(new BoxLayout(painelInternoCursos, BoxLayout.Y_AXIS));
+        painelInternoCursos.setPreferredSize(new Dimension(650, painelInternoCursos.getPreferredSize().height));
+
         
         // força o painel de linhas a usar alinhamento à esquerda
         painelInternoCursos.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        // Altera o Layout para FlowLayout
+        painelCabecalho.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
+
+        // Redimensiona cada JLabel (dimensões identicas as linhas)
+        lblCabecalhoCodigo.setPreferredSize(new Dimension(60, 20));
+        lblCabecalhoNome.setPreferredSize(new Dimension(120, 20));
+        lblCabecalhoCarga.setPreferredSize(new Dimension(40, 20));
+        lblCabecalhoProfessor.setPreferredSize(new Dimension(140, 20));
+        lblEditar.setPreferredSize(new Dimension(50, 20));
+        lblRemover.setPreferredSize(new Dimension(60, 20));
+
         
         carregarCursos();
     }
@@ -80,6 +100,13 @@ public class TelaCursosUI extends javax.swing.JFrame {
         btnPesquisar = new javax.swing.JButton();
         scrollCursos = new javax.swing.JScrollPane();
         painelInternoCursos = new javax.swing.JPanel();
+        painelCabecalho = new javax.swing.JPanel();
+        lblCabecalhoCodigo = new javax.swing.JLabel();
+        lblCabecalhoNome = new javax.swing.JLabel();
+        lblCabecalhoCarga = new javax.swing.JLabel();
+        lblCabecalhoProfessor = new javax.swing.JLabel();
+        lblEditar = new javax.swing.JLabel();
+        lblRemover = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("GERENCIADOR DE CURSOS");
@@ -100,11 +127,15 @@ public class TelaCursosUI extends javax.swing.JFrame {
         });
         painelBotoes.add(btnPesquisar);
 
+        scrollCursos.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        painelInternoCursos.setVerifyInputWhenFocusTarget(false);
+
         javax.swing.GroupLayout painelInternoCursosLayout = new javax.swing.GroupLayout(painelInternoCursos);
         painelInternoCursos.setLayout(painelInternoCursosLayout);
         painelInternoCursosLayout.setHorizontalGroup(
             painelInternoCursosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 398, Short.MAX_VALUE)
+            .addGap(0, 531, Short.MAX_VALUE)
         );
         painelInternoCursosLayout.setVerticalGroup(
             painelInternoCursosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -113,19 +144,67 @@ public class TelaCursosUI extends javax.swing.JFrame {
 
         scrollCursos.setViewportView(painelInternoCursos);
 
+        lblCabecalhoCodigo.setText("Codigo");
+
+        lblCabecalhoNome.setText("Nome");
+
+        lblCabecalhoCarga.setText("Horas");
+
+        lblCabecalhoProfessor.setText("Professor");
+
+        lblEditar.setText("Editar");
+
+        lblRemover.setText("Remover");
+
+        javax.swing.GroupLayout painelCabecalhoLayout = new javax.swing.GroupLayout(painelCabecalho);
+        painelCabecalho.setLayout(painelCabecalhoLayout);
+        painelCabecalhoLayout.setHorizontalGroup(
+            painelCabecalhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelCabecalhoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblCabecalhoCodigo)
+                .addGap(26, 26, 26)
+                .addComponent(lblCabecalhoNome, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblCabecalhoCarga, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblCabecalhoProfessor)
+                .addGap(28, 28, 28)
+                .addComponent(lblEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblRemover)
+                .addGap(31, 31, 31))
+        );
+        painelCabecalhoLayout.setVerticalGroup(
+            painelCabecalhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelCabecalhoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(painelCabecalhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCabecalhoCodigo)
+                    .addComponent(lblCabecalhoNome)
+                    .addComponent(lblCabecalhoCarga)
+                    .addComponent(lblCabecalhoProfessor)
+                    .addComponent(lblEditar)
+                    .addComponent(lblRemover))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(painelBotoes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(scrollCursos, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(painelCabecalho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(scrollCursos, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(painelBotoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrollCursos))
+                .addComponent(painelCabecalho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(scrollCursos, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -179,7 +258,14 @@ public class TelaCursosUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdicionar;
     private javax.swing.JButton btnPesquisar;
+    private javax.swing.JLabel lblCabecalhoCarga;
+    private javax.swing.JLabel lblCabecalhoCodigo;
+    private javax.swing.JLabel lblCabecalhoNome;
+    private javax.swing.JLabel lblCabecalhoProfessor;
+    private javax.swing.JLabel lblEditar;
+    private javax.swing.JLabel lblRemover;
     private javax.swing.JPanel painelBotoes;
+    private javax.swing.JPanel painelCabecalho;
     private javax.swing.JPanel painelInternoCursos;
     private javax.swing.JScrollPane scrollCursos;
     // End of variables declaration//GEN-END:variables

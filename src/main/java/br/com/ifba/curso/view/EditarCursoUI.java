@@ -37,16 +37,29 @@ public class EditarCursoUI extends javax.swing.JDialog {
         setVisible(true);
     }
     
-    private void salvarAlteracoes() {
+     private void salvarAlteracoes() {
+        
+        //trim() garante que " " seja "", tornando possivel detectar vazio
+        String nome = txtNomeProx.getText().trim();
+        String cargaStr = txtCgProx.getText().trim();
+        String prof = txtProfessorProx.getText().trim();
+        
+        if (nome.isEmpty() || cargaStr.isEmpty() || prof.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "O sistema nao permite valores vazios!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         try {
-            curso.setNome(txtNomeProx.getText());
-            curso.setCargaHoraria(Integer.parseInt(txtCgProx.getText()));
-            curso.setProfessor(txtProfessorProx.getText());
+            
+            curso.setNome(nome);
+            curso.setCargaHoraria(Integer.parseInt(cargaStr));
+            curso.setProfessor(prof);
 
             cursoDAO.atualizar(curso);
             telaPrincipal.carregarCursos();
             System.out.println("\n\nCurso editado com sucesso, fechando janela...\n\n");
-            dispose();
+            dispose();    
+            
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Carga horária inválida.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
