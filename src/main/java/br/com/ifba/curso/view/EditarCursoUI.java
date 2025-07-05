@@ -4,10 +4,9 @@
  */
 package br.com.ifba.curso.view;
 
-import br.com.ifba.curso.infrastructure.dao.CursoDAO;
-import br.com.ifba.curso.infrastructure.entity.Curso;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+import br.com.ifba.curso.controller.CursoController;
+import br.com.ifba.curso.entity.Curso;
+import br.com.ifba.util.MensagemUtils;
 
 /**
  *
@@ -15,7 +14,7 @@ import javax.swing.JTextField;
  */
 public class EditarCursoUI extends javax.swing.JDialog {
     private Curso curso;
-    private CursoDAO cursoDAO;
+    private CursoController controller;
     private TelaCursosUI telaPrincipal;
     
     
@@ -23,10 +22,10 @@ public class EditarCursoUI extends javax.swing.JDialog {
     /**
      * Creates new form AdicionarCursoUI
      */
-    public EditarCursoUI(java.awt.Frame parent, Curso curso, CursoDAO cursoDAO, boolean modal) {
+    public EditarCursoUI(java.awt.Frame parent, Curso curso, boolean modal) {
         super(parent, modal);
         this.curso = curso;
-        this.cursoDAO = cursoDAO;
+        this.controller = new CursoController();
         this.telaPrincipal = (TelaCursosUI) parent;
         initComponents();
         
@@ -41,27 +40,38 @@ public class EditarCursoUI extends javax.swing.JDialog {
         
         //trim() garante que " " seja "", tornando possivel detectar vazio
         String nome = txtNomeProx.getText().trim();
-        String cargaStr = txtCgProx.getText().trim();
-        String prof = txtProfessorProx.getText().trim();
-        
-        if (nome.isEmpty() || cargaStr.isEmpty() || prof.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "O sistema nao permite valores vazios!", "Erro", JOptionPane.ERROR_MESSAGE);
+        String cargaTxt = txtCgProx.getText().trim();
+        String professor = txtProfessorProx.getText().trim();
+
+        int cargaHoraria;
+        try {
+            cargaHoraria = Integer.parseInt(cargaTxt);
+        } catch (NumberFormatException ex) {
+            MensagemUtils.erro(this, "Carga horária inválida. Digite um número inteiro.", "Erro");
             return;
         }
         
+        // Monta o objeto
+        curso.setNome(nome);
+        curso.setCargaHoraria(cargaHoraria);
+        curso.setProfessor(professor);
+        
+        // Armazena se foi sucesso ou não
+        boolean sucesso = controller.atualizarCurso(curso);
+        
         try {
             
-            curso.setNome(nome);
-            curso.setCargaHoraria(Integer.parseInt(cargaStr));
-            curso.setProfessor(prof);
-
-            cursoDAO.atualizar(curso);
-            telaPrincipal.carregarCursos();
-            System.out.println("\n\nCurso editado com sucesso, fechando janela...\n\n");
-            dispose();    
-            
+            if (!sucesso) {
+                MensagemUtils.erro(this, "O sistema nao permite valores vazios!", "Erro");
+                return;
+            } else {
+                telaPrincipal.carregarCursos();
+                System.out.println("\n\nCurso editado com sucesso, fechando janela...\n\n");
+                dispose(); 
+            }
+ 
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Carga horária inválida.", "Erro", JOptionPane.ERROR_MESSAGE);
+            MensagemUtils.erro(this, "Carga horária inválida.", "Erro");
         }
     }
 

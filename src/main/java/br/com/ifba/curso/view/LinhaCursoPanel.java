@@ -4,7 +4,7 @@
  */
 package br.com.ifba.curso.view;
 
-import br.com.ifba.curso.infrastructure.entity.Curso;
+import br.com.ifba.curso.entity.Curso;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;

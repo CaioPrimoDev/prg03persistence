@@ -4,7 +4,9 @@
  */
 package br.com.ifba.curso.view;
 
-import br.com.ifba.curso.infrastructure.entity.Curso;
+import br.com.ifba.curso.controller.CursoController;
+import br.com.ifba.curso.entity.Curso;
+import br.com.ifba.util.MensagemUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -18,29 +20,32 @@ import java.util.List;
 public class PesquisarCursoUI extends javax.swing.JDialog {
     
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("prg03persistence");
+    private CursoController controller;
 
     /**
      * Creates new form PesquisarCursoUI
      */
     public PesquisarCursoUI(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        this.controller = new CursoController();
         initComponents();
         
         setVisible(true);
     }
     
     private void buscarCursos() {
-        String termo = txtCampoPesquisa.getText();
+        String termo = txtCampoPesquisa.getText().trim();
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Curso> query = em.createQuery(
-                "SELECT c FROM Curso c WHERE c.nome LIKE :nome", Curso.class);
-            query.setParameter("nome", "%" + termo + "%");
-            List<Curso> resultados = query.getResultList();
+            
+            List<Curso> resultados = controller.buscarPorNomeCurso(termo);
 
+            // Esvazia o JTextArea
             txaResposta.setText("");
+            
             if (resultados.isEmpty()) {
-                txaResposta.setText("Nenhum curso encontrado.");
+                MensagemUtils.info(this, "Nenhum curso encontrado.", "Aviso");
+                //txaResposta.setText("Nenhum curso encontrado.");
             } else {
                 for (Curso c : resultados) {
                     txaResposta.append("[" + c.getCodigo() + "] " + c.getNome()

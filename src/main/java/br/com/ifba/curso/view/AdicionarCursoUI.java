@@ -4,26 +4,26 @@
  */
 package br.com.ifba.curso.view;
 
-import br.com.ifba.curso.infrastructure.dao.CursoDAO;
-import br.com.ifba.curso.infrastructure.entity.Curso;
-import javax.swing.JOptionPane;
+import br.com.ifba.curso.controller.CursoController;
+import br.com.ifba.curso.entity.Curso;
+import br.com.ifba.util.MensagemUtils;
 
 /**
  *
  * @author User
  */
 public class AdicionarCursoUI extends javax.swing.JDialog {
-    private final CursoDAO cursoDAO;
+    private final CursoController controller;
     private final TelaCursosUI telaPrincipal;
     
     /**
      * Creates new form AdicionarCursoUI
      */
-    public AdicionarCursoUI(java.awt.Frame parent, boolean modal, CursoDAO cursoDAO) {
+    public AdicionarCursoUI(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        this.controller = new CursoController();
         initComponents();
         
-        this.cursoDAO = cursoDAO;
         this.telaPrincipal = (TelaCursosUI) parent;
         
         setVisible(true);
@@ -33,24 +33,25 @@ public class AdicionarCursoUI extends javax.swing.JDialog {
         
             //trim() garante que " " seja "", tornando possivel detectar vazio
             String nome = txtNome.getText().trim();
-            String cargaStr = txtCargaHoraria.getText().trim();
+            int carga = Integer.parseInt(txtCargaHoraria.getText());
             String prof = txtProfessor.getText().trim();
+            Curso curso = new Curso(nome, carga, prof);
             
-            if (nome.isEmpty() || cargaStr.isEmpty() || prof.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "O sistema nao permite valores vazios!", "Erro", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+           
             
         try {
-            int carga = Integer.parseInt(cargaStr);
-
-            Curso curso = new Curso(nome, carga, prof);
-            cursoDAO.salvar(curso);
-            telaPrincipal.carregarCursos();
-            System.out.println("\n\nCurso salvo com sucesso, fechando janela...\n\n");
-            dispose();
+            
+            if (!controller.adicionarCurso(curso)) {
+                MensagemUtils.erro(this, "O sistema nao permite valores vazios!", "Erro");
+                return;
+            } else {
+                telaPrincipal.carregarCursos();
+                System.out.println("\n\nCurso salvo com sucesso, fechando janela...\n\n");
+                dispose();
+            }
+            
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Carga horária inválida.", "Erro", JOptionPane.ERROR_MESSAGE);
+            MensagemUtils.erro(this, "Carga horária inválida.", "Erro");
         }
     }
 

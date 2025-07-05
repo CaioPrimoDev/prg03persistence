@@ -4,14 +4,16 @@
  */
 package br.com.ifba.curso.view;
 
-import br.com.ifba.curso.infrastructure.dao.CursoDAO;
-import br.com.ifba.curso.infrastructure.entity.Curso;
+import br.com.ifba.curso.controller.CursoController;
+import br.com.ifba.curso.entity.Curso;
+import br.com.ifba.util.MensagemUtils;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.BoxLayout;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 /**
@@ -19,12 +21,15 @@ import javax.swing.JScrollPane;
  * @author User
  */
 public class TelaCursosUI extends javax.swing.JFrame {
-    CursoDAO dao = new CursoDAO();
+    
+    private final CursoController controller;
+
 
     /**
      * Creates new form TelaCursosUI
      */
     public TelaCursosUI() {
+        this.controller = new CursoController();
         initComponents();
         
         scrollCursos.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -56,7 +61,7 @@ public class TelaCursosUI extends javax.swing.JFrame {
     public void carregarCursos() {
     painelInternoCursos.removeAll();
 
-    List<Curso> cursos = dao.listarTodos();
+    List<Curso> cursos = controller.listarCursos();
 
     for (Curso c : cursos) {
         LinhaCursoPanel linha = new LinhaCursoPanel();
@@ -65,18 +70,20 @@ public class TelaCursosUI extends javax.swing.JFrame {
 
         // ação de editar
         linha.adicionarAcaoEditar(e -> {
-            new EditarCursoUI(this, c, dao, true);
+            new EditarCursoUI(this, c, true);
             carregarCursos();
         });
 
         // ação de remover
-        linha.adicionarAcaoRemover(e -> {
-            int confirm = JOptionPane.showConfirmDialog(this,
-                    "Tem certeza que deseja remover o curso?",
-                    "Confirmação", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                dao.remover(c);
-                carregarCursos();
+        linha.adicionarAcaoRemover(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (MensagemUtils.confirmar(TelaCursosUI.this, 
+                        "Tem certeza que deseja remover o curso?", 
+                        "Confirmação")) {
+                    controller.removerCurso(c.getCodigo());
+                    carregarCursos();
+                }   
             }
         });
 
@@ -211,7 +218,7 @@ public class TelaCursosUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
-        new AdicionarCursoUI(this, true, dao);
+        new AdicionarCursoUI(this, true);
         carregarCursos();
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
@@ -220,41 +227,10 @@ public class TelaCursosUI extends javax.swing.JFrame {
         carregarCursos();
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaCursosUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaCursosUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaCursosUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TelaCursosUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new TelaCursosUI().setVisible(true);
-            }
-        });
+    public void lancarMensagem(String mensagem) {
+    
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdicionar;
     private javax.swing.JButton btnPesquisar;
