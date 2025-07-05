@@ -1,16 +1,60 @@
-
+# ================================
 # Arquivos de compilação
+# ================================
 *.class
 *.jar
+*.war
+*.ear
+*.exe
+*.dll
+*.so
 *.lst
+*.log
+*.tmp
 
+# ================================
 # Diretórios de build e artefatos
+# ================================
 /build/
 /target/
 /classes/
 /dist/
 /out/
 
+# ================================
+# Arquivos gerados pelo Maven
+# ================================
+**/pom.properties
+**/pom.xml.tag
+**/pom.xml.releaseBackup
+**/release.properties
+**/dependency-reduced-pom.xml
+**/maven-status/
+**/maven-archiver/
+
+# ================================
 # Arquivos do NetBeans
+# ================================
 nbproject/private/
 nbbuild/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# ================================
+# Outros: sistema, IDEs e caches
+# ================================
+.DS_Store
+Thumbs.db
+*.iml
+.idea/
+*.ipr
+*.iws
+*.swp
+*.bak
+
+# ================================
+# Ignorar arquivos gerados de entrada
+# ================================
+inputFiles.lst
+
