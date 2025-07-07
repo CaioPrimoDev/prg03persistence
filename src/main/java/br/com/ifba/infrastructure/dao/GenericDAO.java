@@ -14,6 +14,8 @@ import java.util.List;
 /**
  *
  * @author User
+ * @param <T>
+ * @param <ID>
  */
 public abstract class GenericDAO<T, ID extends Serializable>
         implements GenericIDAO<T, ID>{

@@ -6,7 +6,11 @@ package br.com.ifba.curso.controller;
 
 import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.curso.service.CursoService;
+import br.com.ifba.exception.RegraNegocioException;
+import br.com.ifba.util.MensagemUtils;
+import java.util.Collections;
 import java.util.List;
+import javax.swing.JFrame;
 
 /**
  *
@@ -36,8 +40,13 @@ public class CursoController {
         return service.listarTodos();
     }
 
-    public List<Curso> buscarPorNomeCurso(String nome) {
-        return service.buscarPorNomeCurso(nome);
+    public List<Curso> buscarPorNomeCurso(String nome, JFrame parent) {
+        try {
+            return service.buscarPorNomeCurso(nome);
+        } catch (RegraNegocioException e) {
+            MensagemUtils.erro(parent, e.getMessage(), "Erro");
+            return Collections.emptyList();  // retorna lista vazia para UI continuar normal
+        }   
     }
 
     public Curso buscarPorId(int id) {

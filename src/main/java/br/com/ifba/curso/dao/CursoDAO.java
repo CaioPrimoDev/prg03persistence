@@ -6,9 +6,6 @@ package br.com.ifba.curso.dao;
 
 import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.infrastructure.dao.GenericDAO;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
 
@@ -25,14 +22,11 @@ public class CursoDAO extends GenericDAO<Curso, Integer>
 
     @Override
     public List<Curso> findByNomeCurso(String termo) {
-        var em = em();
-        try {
+        try (jakarta.persistence.EntityManager em = em()) {
           TypedQuery<Curso> q = em.createQuery (
           "SELECT c FROM Curso c WHERE c.nome LIKE :nome", Curso.class);
           q.setParameter("nome", "%" + termo.trim() + "%");
           return q.getResultList();
-        } finally {
-         em.close();
         }
     } 
     

@@ -12,6 +12,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
+import javax.swing.JFrame;
 
 /**
  *
@@ -21,6 +22,7 @@ public class PesquisarCursoUI extends javax.swing.JDialog {
     
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("prg03persistence");
     private CursoController controller;
+    private JFrame parent;
 
     /**
      * Creates new form PesquisarCursoUI
@@ -28,6 +30,7 @@ public class PesquisarCursoUI extends javax.swing.JDialog {
     public PesquisarCursoUI(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.controller = new CursoController();
+        this.parent = (JFrame) parent;
         initComponents();
         
         setVisible(true);
@@ -38,7 +41,7 @@ public class PesquisarCursoUI extends javax.swing.JDialog {
         EntityManager em = emf.createEntityManager();
         try {
             
-            List<Curso> resultados = controller.buscarPorNomeCurso(termo);
+            List<Curso> resultados = controller.buscarPorNomeCurso(termo, parent);
 
             // Esvazia o JTextArea
             txaResposta.setText("");

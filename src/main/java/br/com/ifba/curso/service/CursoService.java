@@ -7,6 +7,8 @@ package br.com.ifba.curso.service;
 import br.com.ifba.curso.dao.CursoDAO;
 import br.com.ifba.curso.dao.CursoIDAO;
 import br.com.ifba.curso.entity.Curso;
+import br.com.ifba.exception.RegraNegocioException;
+import jakarta.persistence.PersistenceException;
 import java.util.List;
 
 /**
@@ -26,18 +28,11 @@ public class CursoService {
     }
     
     public boolean adicionarCurso(Curso curso) {
+        if (curso == null) return false;
         
-        if (curso.getNome() == null || curso.getNome().trim().isEmpty()) {
-            return false;
-        }
-
-        if (curso.getProfessor() == null || curso.getProfessor().trim().isEmpty()) {
-            return false;
-        }
-
-        if (curso.getCargaHoraria() <= 0) {
-            return false;
-        }
+        if (curso.getNome() == null || curso.getNome().trim().isEmpty()) return false;
+        if (curso.getProfessor() == null || curso.getProfessor().trim().isEmpty()) return false;
+        if (curso.getCargaHoraria() <= 0) return false;
 
         dao.save(curso);  // persiste no banco
         return true;
@@ -63,7 +58,11 @@ public class CursoService {
     }
 
     public List<Curso> buscarPorNomeCurso(String nome) {
+        try {
         return dao.findByNomeCurso(nome);
+    } catch (PersistenceException e) {
+        throw new RegraNegocioException("Erro ao buscar cursos no banco de dados.", e);
+    }
     }
 
     public Curso buscarPorId(int id) {
