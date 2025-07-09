@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author User
  */
-public class CursoDAO extends GenericDAO<Curso, Integer> 
+public class CursoDAO extends GenericDAO<Curso, Long> 
             implements CursoIDAO {
 
     public CursoDAO() {

@@ -16,41 +16,49 @@ import javax.swing.JFrame;
  *
  * @author User
  */
-public class CursoController {
+public class CursoController implements CursoIController {
     
     private final CursoService service;
     
     public CursoController() {
         this.service = new CursoService();
     }
-    
-    public boolean adicionarCurso(Curso curso) {
-        return service.adicionarCurso(curso);
+
+    @Override
+    public boolean save(Curso curso) {
+        return service.save(curso);
     }
 
-    public boolean atualizarCurso(Curso curso) {
-        return service.atualizarCurso(curso);
+    @Override
+    public boolean update(Curso curso) {
+        return service.update(curso);
     }
 
-    public void removerCurso(int id) {
-        service.removerCurso(id);
+    @Override
+    public void delete(Long id) {
+        service.delete(id);
     }
 
-    public List<Curso> listarCursos() {
-        return service.listarTodos();
+    @Override
+    public List<Curso> findAll() {
+        return service.findAll();   
     }
 
-    public List<Curso> buscarPorNomeCurso(String nome, JFrame parent) {
+    @Override
+    public List<Curso> findByNome(String nome, JFrame parent) {
         try {
-            return service.buscarPorNomeCurso(nome);
+            return service.findByNome(nome, parent);
         } catch (RegraNegocioException e) {
             MensagemUtils.erro(parent, e.getMessage(), "Erro");
             return Collections.emptyList();  // retorna lista vazia para UI continuar normal
         }   
     }
 
-    public Curso buscarPorId(int id) {
-        return service.buscarPorId(id);
-    }   
+    @Override
+    public Curso findById(Long id) {
+        return service.findById(id);
+    }
+    
+  
     
 }

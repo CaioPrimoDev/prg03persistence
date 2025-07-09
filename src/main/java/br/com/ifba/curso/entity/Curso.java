@@ -4,6 +4,7 @@
 
 package br.com.ifba.curso.entity;
 
+import br.com.ifba.infrastructure.entity.PersistenceEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,12 +22,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "curso")
-public class Curso {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int codigo;
+public class Curso extends PersistenceEntity {
 
     @Column(name = "nome", nullable = false, length = 100)
     private String nome;
@@ -45,12 +41,12 @@ public class Curso {
         this.professor = professor;
     }
 
-    public int getCodigo() { return codigo; }
+    //public Long getCodigo() { return getId(); }
     public String getNome() { return nome; }
     public int getCargaHoraria() { return cargaHoraria; }
     public String getProfessor() { return professor; }
 
-    public void setCodigo(int codigo) { this.codigo = codigo; }
+    //public void setCodigo(int codigo) { this.codigo = codigo; }
     public void setNome(String nome) { this.nome = nome; }
     public void setCargaHoraria(int cargaHoraria) { this.cargaHoraria = cargaHoraria; }
     public void setProfessor(String professor) { this.professor = professor; }
@@ -60,18 +56,18 @@ public class Curso {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Curso curso = (Curso) o;
-        return codigo == curso.codigo;
+        return getId() == curso.getId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(codigo);
+        return Objects.hash(getId());
     }
 
     @Override
     public String toString() {
         return "Curso{" +
-               "codigo=" + codigo +
+               "codigo=" + getId() +
                ", nome='" + nome + '\'' +
                ", cargaHoraria=" + cargaHoraria +
                ", professor='" + professor + '\'' +

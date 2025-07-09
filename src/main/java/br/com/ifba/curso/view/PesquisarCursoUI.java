@@ -41,7 +41,7 @@ public class PesquisarCursoUI extends javax.swing.JDialog {
         EntityManager em = emf.createEntityManager();
         try {
             
-            List<Curso> resultados = controller.buscarPorNomeCurso(termo, parent);
+            List<Curso> resultados = controller.findByNome(termo, parent);
 
             // Esvazia o JTextArea
             txaResposta.setText("");
@@ -51,7 +51,7 @@ public class PesquisarCursoUI extends javax.swing.JDialog {
                 //txaResposta.setText("Nenhum curso encontrado.");
             } else {
                 for (Curso c : resultados) {
-                    txaResposta.append("[" + c.getCodigo() + "] " + c.getNome()
+                    txaResposta.append("[" + c.getId() + "] " + c.getNome()
                             + " - " + c.getCargaHoraria() + "h - Prof: " + c.getProfessor() + "\n");
                 }
             }

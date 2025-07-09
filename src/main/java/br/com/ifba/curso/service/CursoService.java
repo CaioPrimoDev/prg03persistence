@@ -10,12 +10,13 @@ import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.exception.RegraNegocioException;
 import jakarta.persistence.PersistenceException;
 import java.util.List;
+import javax.swing.JFrame;
 
 /**
  *
  * @author User
  */
-public class CursoService {
+public class CursoService implements CursoIService {
     
     private CursoIDAO dao;
 
@@ -26,8 +27,9 @@ public class CursoService {
     public CursoService(CursoIDAO dao) {
         this.dao = dao;
     }
-    
-    public boolean adicionarCurso(Curso curso) {
+
+    @Override
+    public boolean save(Curso curso) {
         if (curso == null) return false;
         
         if (curso.getNome() == null || curso.getNome().trim().isEmpty()) return false;
@@ -38,7 +40,8 @@ public class CursoService {
         return true;
     }
 
-    public boolean atualizarCurso(Curso curso) {
+    @Override
+    public boolean update(Curso curso) {
         if (curso == null) return false;
         
         if (curso.getNome() == null || curso.getNome().trim().isEmpty()) return false;
@@ -49,25 +52,31 @@ public class CursoService {
         return true;
     }
 
-    public void removerCurso(int id) {
-        dao.delete(id);  
+    @Override
+    public void delete(Long id) {
+        dao.delete(id);
     }
 
-    public List<Curso> listarTodos() {
+    @Override
+    public List<Curso> findAll() {
         return dao.findAll();
     }
 
-    public List<Curso> buscarPorNomeCurso(String nome) {
+    @Override
+    public List<Curso> findByNome(String nome, JFrame parent) {
         try {
-        return dao.findByNomeCurso(nome);
-    } catch (PersistenceException e) {
-        throw new RegraNegocioException("Erro ao buscar cursos no banco de dados.", e);
-    }
+            return dao.findByNomeCurso(nome);
+        } catch (PersistenceException e) {
+            throw new RegraNegocioException("Erro ao buscar cursos no banco de dados.", e);
+        }
     }
 
-    public Curso buscarPorId(int id) {
+    @Override
+    public Curso findById(Long id) {
         return dao.findById(id);
-    }   
+    }
+    
+    
     
     
 }

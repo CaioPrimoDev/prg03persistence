@@ -45,7 +45,7 @@ public class LinhaCursoPanel extends javax.swing.JPanel {
 
     
     public void setCurso(Curso c) {
-    lblCodigo .setText("[" + c.getCodigo() + "]");
+    lblCodigo .setText("[" + c.getId() + "]");
     lblNome   .setText(c.getNome());
     lblCargaH  .setText(c.getCargaHoraria() + "");
     lblProfessor.setText(c.getProfessor());

@@ -12,6 +12,6 @@ import java.util.List;
  *
  * @author User
  */
-public interface CursoIDAO extends GenericIDAO<Curso, Integer> {
+public interface CursoIDAO extends GenericIDAO<Curso, Long> {
     List<Curso> findByNomeCurso(String nomeCurso);      
 }

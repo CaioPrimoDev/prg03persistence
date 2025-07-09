@@ -61,7 +61,7 @@ public class TelaCursosUI extends javax.swing.JFrame {
     public void carregarCursos() {
     painelInternoCursos.removeAll();
 
-    List<Curso> cursos = controller.listarCursos();
+    List<Curso> cursos = controller.findAll();
 
     for (Curso c : cursos) {
         LinhaCursoPanel linha = new LinhaCursoPanel();
@@ -81,7 +81,7 @@ public class TelaCursosUI extends javax.swing.JFrame {
                 if (MensagemUtils.confirmar(TelaCursosUI.this, 
                         "Tem certeza que deseja remover o curso?", 
                         "Confirmação")) {
-                    controller.removerCurso(c.getCodigo());
+                    controller.delete(c.getId());
                     carregarCursos();
                 }   
             }

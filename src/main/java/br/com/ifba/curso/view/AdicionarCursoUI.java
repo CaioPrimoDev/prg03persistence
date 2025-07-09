@@ -41,7 +41,7 @@ public class AdicionarCursoUI extends javax.swing.JDialog {
             
         try {
             
-            if (!controller.adicionarCurso(curso)) {
+            if (!controller.save(curso)) {
                 MensagemUtils.erro(this, "O sistema nao permite valores vazios!", "Erro");
                 return;
             } else {

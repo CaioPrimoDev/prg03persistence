@@ -39,7 +39,12 @@ public abstract class GenericDAO<T, ID extends Serializable>
           em.getTransaction().begin();
           em.persist(entity);
           em.getTransaction().commit();
-        } finally {
+        } catch (Exception e) {       
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();  // desfaz alterações
+            }
+            throw e;
+        }finally {
           em.close();
         }
     }
@@ -80,7 +85,7 @@ public abstract class GenericDAO<T, ID extends Serializable>
         }
     }
 
-    @Override
+    @Override   
     public List<T> findAll() {
         EntityManager em = em();
         try {

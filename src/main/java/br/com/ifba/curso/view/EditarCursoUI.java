@@ -57,7 +57,7 @@ public class EditarCursoUI extends javax.swing.JDialog {
         curso.setProfessor(professor);
         
         // Armazena se foi sucesso ou não
-        boolean sucesso = controller.atualizarCurso(curso);
+        boolean sucesso = controller.update(curso);
         
         try {
             
