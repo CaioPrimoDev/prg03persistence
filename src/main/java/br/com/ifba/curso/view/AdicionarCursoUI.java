@@ -30,30 +30,24 @@ public class AdicionarCursoUI extends javax.swing.JDialog {
     }
     
     private void salvarCurso() {
-        
-            //trim() garante que " " seja "", tornando possivel detectar vazio
-            String nome = txtNome.getText().trim();
-            int carga = Integer.parseInt(txtCargaHoraria.getText());
-            String prof = txtProfessor.getText().trim();
-            Curso curso = new Curso(nome, carga, prof);
-            
-           
-            
         try {
-            
-            if (!controller.save(curso)) {
-                MensagemUtils.erro(this, "O sistema nao permite valores vazios!", "Erro");
-                return;
-            } else {
+            String nome = txtNome.getText().trim();
+            int carga = Integer.parseInt(txtCargaHoraria.getText().trim());
+            String prof = txtProfessor.getText().trim();
+
+            Curso curso = new Curso(nome, carga, prof);
+
+            if (controller.save(AdicionarCursoUI.this, curso)) {
                 telaPrincipal.carregarCursos();
                 System.out.println("\n\nCurso salvo com sucesso, fechando janela...\n\n");
                 dispose();
             }
-            
+
         } catch (NumberFormatException ex) {
             MensagemUtils.erro(this, "Carga horária inválida.", "Erro");
         }
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.

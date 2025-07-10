@@ -5,6 +5,7 @@
 package br.com.ifba.curso.controller;
 
 import br.com.ifba.curso.entity.Curso;
+import java.awt.Window;
 import java.util.List;
 import javax.swing.JFrame;
 
@@ -14,10 +15,10 @@ import javax.swing.JFrame;
  */
 public interface CursoIController {
     
-    boolean save(Curso curso);
-    boolean update(Curso curso);
-    void delete (Long id);
-    List<Curso> findAll();
+    boolean save(Window parent, Curso curso);
+    boolean update(Window parent, Curso curso);
+    void delete (JFrame parent, Long id);
+    List<Curso> findAll(JFrame parent);
     List<Curso> findByNome(String nome, JFrame parent);
-    Curso findById(Long id);
+    Curso findById(JFrame parent, Long id);
 }

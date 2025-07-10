@@ -8,6 +8,7 @@ import br.com.ifba.curso.dao.CursoDAO;
 import br.com.ifba.curso.dao.CursoIDAO;
 import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.exception.RegraNegocioException;
+import br.com.ifba.infrastructure.util.StringUtil;
 import jakarta.persistence.PersistenceException;
 import java.util.List;
 import javax.swing.JFrame;
@@ -30,53 +31,107 @@ public class CursoService implements CursoIService {
 
     @Override
     public boolean save(Curso curso) {
-        if (curso == null) return false;
-        
-        if (curso.getNome() == null || curso.getNome().trim().isEmpty()) return false;
-        if (curso.getProfessor() == null || curso.getProfessor().trim().isEmpty()) return false;
-        if (curso.getCargaHoraria() <= 0) return false;
-
-        dao.save(curso);  // persiste no banco
-        return true;
+        validarCurso(curso);
+        try {
+            dao.save(curso);
+            return true;
+        } catch (PersistenceException e) {
+            throw new RegraNegocioException("Erro ao salvar curso no banco de dados.", e);
+        }
     }
 
     @Override
     public boolean update(Curso curso) {
-        if (curso == null) return false;
-        
-        if (curso.getNome() == null || curso.getNome().trim().isEmpty()) return false;
-        if (curso.getProfessor() == null || curso.getProfessor().trim().isEmpty()) return false;
-        if (curso.getCargaHoraria() <= 0) return false;
-        
-        dao.update(curso);
-        return true;
+        validarCurso(curso);
+        try {
+            dao.update(curso);
+            return true;
+        } catch (PersistenceException e) {
+            throw new RegraNegocioException("Erro ao atualizar curso no banco de dados.", e);
+        }
     }
 
     @Override
     public void delete(Long id) {
-        dao.delete(id);
+        if (id == null || id <= 0) {
+            throw new RegraNegocioException("ID de curso inválido para exclusão.");
+        }
+
+        try {
+            dao.delete(id);
+        } catch (PersistenceException e) {
+            throw new RegraNegocioException("Erro ao excluir curso no banco de dados.", e);
+        }
     }
 
     @Override
     public List<Curso> findAll() {
-        return dao.findAll();
+        try {
+            return dao.findAll();
+        } catch (PersistenceException e) {
+            throw new RegraNegocioException("Erro ao buscar todos os cursos.", e);
+        }
     }
 
     @Override
-    public List<Curso> findByNome(String nome, JFrame parent) {
+    public List<Curso> findByNome(String nome) {
+        if (StringUtil.isNullOrEmpty(nome)) {
+            throw new RegraNegocioException("Informe um nome válido para a busca.");
+        }
+
         try {
             return dao.findByNomeCurso(nome);
         } catch (PersistenceException e) {
-            throw new RegraNegocioException("Erro ao buscar cursos no banco de dados.", e);
+            throw new RegraNegocioException("Erro ao buscar cursos por nome.", e);
         }
     }
 
     @Override
     public Curso findById(Long id) {
-        return dao.findById(id);
+        if (id == null || id <= 0) {
+            throw new RegraNegocioException("ID inválido para busca.");
+        }
+
+        try {
+            Curso curso = dao.findById(id);
+            if (curso == null) {
+                throw new RegraNegocioException("Curso não encontrado.");
+            }
+            return curso;
+        } catch (PersistenceException e) {
+            throw new RegraNegocioException("Erro ao buscar curso por ID.", e);
+        }
     }
     
-    
+    // Validação de regra de negócio
+    private void validarCurso(Curso curso) {
+        if (curso == null) {
+            throw new RegraNegocioException("O curso não pode ser nulo.");
+        }
+
+        String nome = curso.getNome();
+        String professor = curso.getProfessor();
+
+        if (StringUtil.isNullOrEmpty(nome)) {
+            throw new RegraNegocioException("O nome do curso é obrigatório.");
+        }
+
+        if (!StringUtil.hasValidLength(nome, 3, 100)) {
+            throw new RegraNegocioException("O nome do curso deve ter entre 3 e 100 caracteres.");
+        }
+
+        if (curso.getCargaHoraria() <= 0) {
+            throw new RegraNegocioException("A carga horária deve ser maior que zero.");
+        }
+
+        if (StringUtil.isNullOrEmpty(professor)) {
+            throw new RegraNegocioException("O nome do professor é obrigatório.");
+        }
+
+        if (!StringUtil.hasValidLength(professor, 3, 100)) {
+            throw new RegraNegocioException("O nome do professor deve ter entre 3 e 100 caracteres.");
+        }
+    }
     
     
 }

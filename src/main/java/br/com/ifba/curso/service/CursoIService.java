@@ -17,6 +17,6 @@ public interface CursoIService {
     boolean update(Curso curso);
     void delete (Long id);
     List<Curso> findAll();
-    List<Curso> findByNome(String nome, JFrame parent);
+    List<Curso> findByNome(String nome);
     Curso findById(Long id);
 }

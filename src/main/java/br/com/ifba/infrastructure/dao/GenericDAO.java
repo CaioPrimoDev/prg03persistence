@@ -57,6 +57,11 @@ public abstract class GenericDAO<T, ID extends Serializable>
             T merged = em.merge(entity);
             em.getTransaction().commit();
             return merged;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
         } finally {
             em.close();
         }
@@ -68,8 +73,15 @@ public abstract class GenericDAO<T, ID extends Serializable>
         try {
             em.getTransaction().begin();
             T obj = em.find(entityClass, id);
-            if (obj != null) em.remove(obj);
+            if (obj != null) {
+                em.remove(obj);
+            }
             em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
         } finally {
             em.close();
         }
@@ -80,6 +92,8 @@ public abstract class GenericDAO<T, ID extends Serializable>
         EntityManager em = em();
         try {
             return em.find(entityClass, id);
+        } catch (Exception e) {
+            throw e; // leitura também pode lançar exceções
         } finally {
             em.close();
         }
@@ -90,8 +104,10 @@ public abstract class GenericDAO<T, ID extends Serializable>
         EntityManager em = em();
         try {
             CriteriaQuery<T> cq = em.getCriteriaBuilder().createQuery(entityClass);
-            cq.from(entityClass); // define a raiz da query
+            cq.from(entityClass);
             return em.createQuery(cq).getResultList();
+        } catch (Exception e) {
+            throw e;
         } finally {
             em.close();
         }

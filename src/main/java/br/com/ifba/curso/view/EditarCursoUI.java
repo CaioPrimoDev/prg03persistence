@@ -21,6 +21,9 @@ public class EditarCursoUI extends javax.swing.JDialog {
 
     /**
      * Creates new form AdicionarCursoUI
+     * @param parent
+     * @param curso
+     * @param modal
      */
     public EditarCursoUI(java.awt.Frame parent, Curso curso, boolean modal) {
         super(parent, modal);
@@ -57,7 +60,7 @@ public class EditarCursoUI extends javax.swing.JDialog {
         curso.setProfessor(professor);
         
         // Armazena se foi sucesso ou não
-        boolean sucesso = controller.update(curso);
+        boolean sucesso = controller.update(EditarCursoUI.this, curso);
         
         try {
             

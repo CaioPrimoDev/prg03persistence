@@ -61,7 +61,7 @@ public class TelaCursosUI extends javax.swing.JFrame {
     public void carregarCursos() {
     painelInternoCursos.removeAll();
 
-    List<Curso> cursos = controller.findAll();
+    List<Curso> cursos = controller.findAll(this);
 
     for (Curso c : cursos) {
         LinhaCursoPanel linha = new LinhaCursoPanel();
@@ -81,7 +81,8 @@ public class TelaCursosUI extends javax.swing.JFrame {
                 if (MensagemUtils.confirmar(TelaCursosUI.this, 
                         "Tem certeza que deseja remover o curso?", 
                         "Confirmação")) {
-                    controller.delete(c.getId());
+                    // como é um Listener 'this' não representa mais o JFrame, mas sim o contexto de Listener
+                    controller.delete(TelaCursosUI.this, c.getId());
                     carregarCursos();
                 }   
             }

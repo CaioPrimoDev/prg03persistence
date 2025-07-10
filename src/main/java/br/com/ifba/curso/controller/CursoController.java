@@ -8,6 +8,7 @@ import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.curso.service.CursoService;
 import br.com.ifba.exception.RegraNegocioException;
 import br.com.ifba.util.MensagemUtils;
+import java.awt.Window;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JFrame;
@@ -25,38 +26,63 @@ public class CursoController implements CursoIController {
     }
 
     @Override
-    public boolean save(Curso curso) {
-        return service.save(curso);
+    public boolean save(Window parent, Curso curso) {
+        try {
+            return service.save(curso);
+        } catch (RegraNegocioException e) {
+            MensagemUtils.erro(parent, e.getMessage(), "Erro ao salvar curso");
+            return false;
+        }
     }
 
     @Override
-    public boolean update(Curso curso) {
-        return service.update(curso);
+    public boolean update(Window parent, Curso curso) {
+        try {
+            return service.update(curso);
+        } catch (RegraNegocioException e) {
+            MensagemUtils.erro(parent, e.getMessage(), "Erro ao atualizar curso");
+            return false;
+        }
     }
 
     @Override
-    public void delete(Long id) {
-        service.delete(id);
+    public void delete(JFrame parent, Long id) {
+        try {
+            service.delete(id);
+            MensagemUtils.info(parent, "Curso excluído com sucesso.", "Sucesso");
+        } catch (RegraNegocioException e) {
+            MensagemUtils.erro(parent, e.getMessage(), "Erro ao excluir curso");
+        }
     }
 
     @Override
-    public List<Curso> findAll() {
-        return service.findAll();   
+    public List<Curso> findAll(JFrame parent) {
+        try {
+            return service.findAll();
+        } catch (RegraNegocioException e) {
+            MensagemUtils.erro(parent, e.getMessage(), "Erro ao buscar cursos");
+            return Collections.emptyList();
+        }
     }
 
     @Override
     public List<Curso> findByNome(String nome, JFrame parent) {
         try {
-            return service.findByNome(nome, parent);
+            return service.findByNome(nome);
         } catch (RegraNegocioException e) {
-            MensagemUtils.erro(parent, e.getMessage(), "Erro");
-            return Collections.emptyList();  // retorna lista vazia para UI continuar normal
+            MensagemUtils.erro(parent, e.getMessage(), "Erro ao buscar por nome");
+            return Collections.emptyList();
         }   
     }
 
     @Override
-    public Curso findById(Long id) {
-        return service.findById(id);
+    public Curso findById(JFrame parent, Long id) {
+        try {
+            return service.findById(id);
+        } catch (RegraNegocioException e) {
+            MensagemUtils.erro(parent, e.getMessage(), "Erro ao buscar por ID");
+            return null;
+        }
     }
     
   
