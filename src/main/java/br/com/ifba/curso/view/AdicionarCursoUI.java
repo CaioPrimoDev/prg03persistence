@@ -6,7 +6,9 @@ package br.com.ifba.curso.view;
 
 import br.com.ifba.curso.controller.CursoController;
 import br.com.ifba.curso.entity.Curso;
+import br.com.ifba.exception.RegraNegocioException;
 import br.com.ifba.util.MensagemUtils;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -35,24 +37,24 @@ public class AdicionarCursoUI extends javax.swing.JDialog {
         String prof = txtProfessor.getText().trim();
         
         int carga;
-        try {
-            
-            carga = Integer.parseInt(txtCargaHoraria.getText().trim());
-            
+        try {  
+            carga = Integer.parseInt(txtCargaHoraria.getText().trim());   
         } catch (NumberFormatException ex) {
             carga = -1;
         }
         
         Curso curso = new Curso(nome, carga, prof);
 
-            if (controller.save(AdicionarCursoUI.this, curso)) {
-                telaPrincipal.carregarCursos();
-                System.out.println("\n\nCurso salvo com sucesso, fechando janela...\n\n");
-                dispose();
-            }
-
-        
-        
+        try {
+            if (controller.save(curso)) {
+                    telaPrincipal.carregarCursos();
+                    System.out.println("\n\nCurso salvo com sucesso, fechando janela...\n\n");
+                    dispose();
+                }
+        } catch (RegraNegocioException e) {
+                 JOptionPane.showMessageDialog(this, e.getMessage(), "Erro de validação", JOptionPane.ERROR_MESSAGE);
+        }
+ 
     }
 
 

@@ -6,6 +6,7 @@ package br.com.ifba.curso.view;
 
 import br.com.ifba.curso.controller.CursoController;
 import br.com.ifba.curso.entity.Curso;
+import br.com.ifba.exception.RegraNegocioException;
 import br.com.ifba.util.MensagemUtils;
 
 /**
@@ -50,20 +51,16 @@ public class EditarCursoUI extends javax.swing.JDialog {
         try {
             cargaHoraria = Integer.parseInt(cargaTxt);
         } catch (NumberFormatException ex) {
-            cargaHoraria = -1;
-            return;
+            cargaHoraria = -1; // será validado na camada de serviço
         }
         
         // Monta o objeto
         curso.setNome(nome);
         curso.setCargaHoraria(cargaHoraria);
-        curso.setProfessor(professor);
-        
-        // Armazena se foi sucesso ou não
-        boolean sucesso = controller.update(EditarCursoUI.this, curso);
+        curso.setProfessor(professor);        
         
         try {
-            
+            boolean sucesso = controller.update(curso);
             if (!sucesso) {
                 MensagemUtils.erro(this, "O sistema nao permite valores vazios!", "Erro");
                 return;
@@ -73,8 +70,8 @@ public class EditarCursoUI extends javax.swing.JDialog {
                 dispose(); 
             }
  
-        } catch (NumberFormatException ex) {
-            MensagemUtils.erro(this, "Carga horária inválida.", "Erro");
+        } catch (RegraNegocioException e) {
+            MensagemUtils.erro(this, e.getMessage(), "Erro de validação");
         }
     }
 

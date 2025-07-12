@@ -15,10 +15,10 @@ import javax.swing.JFrame;
  */
 public interface CursoIController {
     
-    boolean save(Window parent, Curso curso);
-    boolean update(Window parent, Curso curso);
-    void delete (JFrame parent, Long id);
-    List<Curso> findAll(JFrame parent);
-    List<Curso> findByNome(String nome, JFrame parent);
-    Curso findById(JFrame parent, Long id);
+    boolean save(Curso curso);
+    boolean update(Curso curso);
+    void delete (Long id);
+    List<Curso> findAll();
+    List<Curso> findByNome(String nome);
+    Curso findById(Long id);
 }

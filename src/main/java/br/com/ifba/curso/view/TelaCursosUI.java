@@ -7,6 +7,7 @@ package br.com.ifba.curso.view;
 import br.com.ifba.curso.controller.CursoController;
 import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.entity.Curso;
+import br.com.ifba.exception.RegraNegocioException;
 import br.com.ifba.util.MensagemUtils;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -34,7 +35,6 @@ public class TelaCursosUI extends javax.swing.JFrame {
         initComponents();
         
         scrollCursos.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-
         
         // Define layout vertical para o painel interno
         painelInternoCursos.setLayout(new BoxLayout(painelInternoCursos, BoxLayout.Y_AXIS));
@@ -54,47 +54,86 @@ public class TelaCursosUI extends javax.swing.JFrame {
         lblCabecalhoProfessor.setPreferredSize(new Dimension(140, 20));
         lblEditar.setPreferredSize(new Dimension(50, 20));
         lblRemover.setPreferredSize(new Dimension(60, 20));
+        
+        txtBusca.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                filtrarCursos();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                filtrarCursos();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                filtrarCursos();
+            }
+        });
+
 
         
         carregarCursos();
     }
     
-    public void carregarCursos() {
-    painelInternoCursos.removeAll();
+    private void filtrarCursos() {
+        String termo = txtBusca.getText().trim().toLowerCase();
 
-    List<Curso> cursos = controller.findAll(this);
+        List<Curso> cursos;
+        if (termo.isEmpty() || termo.equals("procurar...")) {
+            cursos = controller.findAll();
+        } else {
+            cursos = controller.findByNome(termo);
+        }
 
-    for (Curso c : cursos) {
-        LinhaCursoPanel linha = new LinhaCursoPanel();
-        linha.setCurso(c); // define os dados visuais
-        linha.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        // ação de editar
-        linha.adicionarAcaoEditar(e -> {
-            new EditarCursoUI(this, c, true);
-            carregarCursos();
-        });
-
-        // ação de remover
-        linha.adicionarAcaoRemover(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (MensagemUtils.confirmar(TelaCursosUI.this, 
-                        "Tem certeza que deseja remover o curso?", 
-                        "Confirmação")) {
-                    // como é um Listener 'this' não representa mais o JFrame, mas sim o contexto de Listener
-                    controller.delete(TelaCursosUI.this, c.getId());
-                    carregarCursos();
-                }   
-            }
-        });
-
-        painelInternoCursos.add(linha);
+        exibirCursosNaTela(cursos);
     }
+
+    
+    public void carregarCursos() {
+        List<Curso> cursos = controller.findAll();
+        exibirCursosNaTela(cursos);
+    }
+
+    
+    private void exibirCursosNaTela(List<Curso> cursos) {
+        painelInternoCursos.removeAll();
+
+        for (Curso c : cursos) {
+            LinhaCursoPanel linha = new LinhaCursoPanel();
+            linha.setCurso(c);
+            linha.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            linha.adicionarAcaoEditar(e -> {
+                new EditarCursoUI(this, c, true);
+                carregarCursos();
+            });
+
+            linha.adicionarAcaoRemover(e -> {
+                if (MensagemUtils.confirmar(this,
+                        "Tem certeza que deseja remover o curso?",
+                        "Confirmação")) {
+                    try {
+                        controller.delete(c.getId());
+                        MensagemUtils.info(this, "Curso excluído com sucesso.", "Sucesso");
+                        carregarCursos();
+                    } catch (RegraNegocioException ex) {
+                        MensagemUtils.erro(this, ex.getMessage(), "Erro ao excluir curso");
+                    } catch (Exception ex) {
+                        MensagemUtils.erro(this, "Erro inesperado ao excluir curso.", "Erro");
+                        ex.printStackTrace();
+                    }
+                }
+            });
+
+            painelInternoCursos.add(linha);
+        }
 
         painelInternoCursos.revalidate();
         painelInternoCursos.repaint();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -105,8 +144,9 @@ public class TelaCursosUI extends javax.swing.JFrame {
     private void initComponents() {
 
         painelBotoes = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        txtBusca = new javax.swing.JTextField();
         btnAdicionar = new javax.swing.JButton();
-        btnPesquisar = new javax.swing.JButton();
         scrollCursos = new javax.swing.JScrollPane();
         painelInternoCursos = new javax.swing.JPanel();
         painelCabecalho = new javax.swing.JPanel();
@@ -120,6 +160,17 @@ public class TelaCursosUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("GERENCIADOR DE CURSOS");
 
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/ifba/persistence/images/search.png"))); // NOI18N
+        painelBotoes.add(jLabel1);
+
+        txtBusca.setPreferredSize(new java.awt.Dimension(155, 25));
+        txtBusca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBuscaActionPerformed(evt);
+            }
+        });
+        painelBotoes.add(txtBusca);
+
         btnAdicionar.setText("Adicionar Curso");
         btnAdicionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -127,14 +178,6 @@ public class TelaCursosUI extends javax.swing.JFrame {
             }
         });
         painelBotoes.add(btnAdicionar);
-
-        btnPesquisar.setText("Pesquisar Curso");
-        btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPesquisarActionPerformed(evt);
-            }
-        });
-        painelBotoes.add(btnPesquisar);
 
         scrollCursos.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -224,18 +267,13 @@ public class TelaCursosUI extends javax.swing.JFrame {
         carregarCursos();
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
-    private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-        new PesquisarCursoUI(this, true);
-        carregarCursos();
-    }//GEN-LAST:event_btnPesquisarActionPerformed
-
-    public void lancarMensagem(String mensagem) {
-    
-    }
-    
+    private void txtBuscaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBuscaActionPerformed
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdicionar;
-    private javax.swing.JButton btnPesquisar;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblCabecalhoCarga;
     private javax.swing.JLabel lblCabecalhoCodigo;
     private javax.swing.JLabel lblCabecalhoNome;
@@ -246,5 +284,6 @@ public class TelaCursosUI extends javax.swing.JFrame {
     private javax.swing.JPanel painelCabecalho;
     private javax.swing.JPanel painelInternoCursos;
     private javax.swing.JScrollPane scrollCursos;
+    private javax.swing.JTextField txtBusca;
     // End of variables declaration//GEN-END:variables
 }
