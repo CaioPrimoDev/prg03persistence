@@ -5,6 +5,7 @@
 package br.com.ifba.curso.view;
 
 import br.com.ifba.curso.controller.CursoController;
+import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.util.MensagemUtils;
 import java.awt.Component;
@@ -22,7 +23,7 @@ import javax.swing.JScrollPane;
  */
 public class TelaCursosUI extends javax.swing.JFrame {
     
-    private final CursoController controller;
+    private final CursoIController controller;
 
 
     /**

@@ -111,6 +111,10 @@ public class CursoService implements CursoIService {
 
         String nome = curso.getNome();
         String professor = curso.getProfessor();
+        
+        if(curso.getCargaHoraria() == -1) {
+            throw new RegraNegocioException("Carga Horario deve ser inteiro e não vazio.");
+        }
 
         if (StringUtil.isNullOrEmpty(nome)) {
             throw new RegraNegocioException("O nome do curso é obrigatório.");

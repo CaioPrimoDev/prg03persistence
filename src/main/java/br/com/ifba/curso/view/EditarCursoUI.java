@@ -50,7 +50,7 @@ public class EditarCursoUI extends javax.swing.JDialog {
         try {
             cargaHoraria = Integer.parseInt(cargaTxt);
         } catch (NumberFormatException ex) {
-            MensagemUtils.erro(this, "Carga horária inválida. Digite um número inteiro.", "Erro");
+            cargaHoraria = -1;
             return;
         }
         

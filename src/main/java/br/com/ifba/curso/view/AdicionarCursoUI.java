@@ -30,12 +30,20 @@ public class AdicionarCursoUI extends javax.swing.JDialog {
     }
     
     private void salvarCurso() {
+        String nome = txtNome.getText().trim();
+        String cargTxt = txtCargaHoraria.getText().trim();
+        String prof = txtProfessor.getText().trim();
+        
+        int carga;
         try {
-            String nome = txtNome.getText().trim();
-            int carga = Integer.parseInt(txtCargaHoraria.getText().trim());
-            String prof = txtProfessor.getText().trim();
-
-            Curso curso = new Curso(nome, carga, prof);
+            
+            carga = Integer.parseInt(txtCargaHoraria.getText().trim());
+            
+        } catch (NumberFormatException ex) {
+            carga = -1;
+        }
+        
+        Curso curso = new Curso(nome, carga, prof);
 
             if (controller.save(AdicionarCursoUI.this, curso)) {
                 telaPrincipal.carregarCursos();
@@ -43,9 +51,8 @@ public class AdicionarCursoUI extends javax.swing.JDialog {
                 dispose();
             }
 
-        } catch (NumberFormatException ex) {
-            MensagemUtils.erro(this, "Carga horária inválida.", "Erro");
-        }
+        
+        
     }
 
 

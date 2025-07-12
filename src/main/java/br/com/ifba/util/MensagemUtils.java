@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
  * @author User
  */
 public final class MensagemUtils {
-        public static void info(Component parent, String mensagem, String titulo) {
+    public static void info(Component parent, String mensagem, String titulo) {
         JOptionPane.showMessageDialog(parent, mensagem, titulo, JOptionPane.INFORMATION_MESSAGE);
     }
 
