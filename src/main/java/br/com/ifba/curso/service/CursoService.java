@@ -4,100 +4,76 @@
  */
 package br.com.ifba.curso.service;
 
-import br.com.ifba.curso.dao.CursoDAO;
-import br.com.ifba.curso.dao.CursoIDAO;
 import br.com.ifba.curso.entity.Curso;
+import br.com.ifba.curso.repository.CursoRepository;
 import br.com.ifba.exception.RegraNegocioException;
 import br.com.ifba.infrastructure.util.StringUtil;
 import jakarta.persistence.PersistenceException;
 import java.util.List;
-import javax.swing.JFrame;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author User
  */
-public class CursoService implements CursoIService {
-    
-    private CursoIDAO dao;
 
-    public CursoService() {
-        this.dao = new CursoDAO();
-    }
+@Service
+public class CursoService {
     
-    public CursoService(CursoIDAO dao) {
-        this.dao = dao;
-    }
+    @Autowired
+    private CursoRepository repo;
 
-    @Override
     public boolean save(Curso curso) {
         validarCurso(curso);
         try {
-            dao.save(curso);
+            repo.save(curso);
             return true;
         } catch (PersistenceException e) {
             throw new RegraNegocioException("Erro ao salvar curso no banco de dados.", e);
         }
     }
 
-    @Override
-    public boolean update(Curso curso) {
-        validarCurso(curso);
-        try {
-            dao.update(curso);
-            return true;
-        } catch (PersistenceException e) {
-            throw new RegraNegocioException("Erro ao atualizar curso no banco de dados.", e);
-        }
-    }
-
-    @Override
     public void delete(Long id) {
         if (id == null || id <= 0) {
             throw new RegraNegocioException("ID de curso inválido para exclusão.");
         }
 
         try {
-            dao.delete(id);
+            repo.deleteById(id);
         } catch (PersistenceException e) {
             throw new RegraNegocioException("Erro ao excluir curso no banco de dados.", e);
         }
     }
 
-    @Override
     public List<Curso> findAll() {
         try {
-            return dao.findAll();
+            return repo.findAll();
         } catch (PersistenceException e) {
             throw new RegraNegocioException("Erro ao buscar todos os cursos.", e);
         }
     }
 
-    @Override
     public List<Curso> findByNome(String nome) {
         if (StringUtil.isNullOrEmpty(nome)) {
             throw new RegraNegocioException("Informe um nome válido para a busca.");
         }
 
         try {
-            return dao.findByNomeCurso(nome);
+            return repo.findByNomeContainingIgnoreCase(nome);
         } catch (PersistenceException e) {
             throw new RegraNegocioException("Erro ao buscar cursos por nome.", e);
         }
     }
 
-    @Override
     public Curso findById(Long id) {
         if (id == null || id <= 0) {
             throw new RegraNegocioException("ID inválido para busca.");
         }
 
         try {
-            Curso curso = dao.findById(id);
-            if (curso == null) {
-                throw new RegraNegocioException("Curso não encontrado.");
-            }
-            return curso;
+            return repo.findById(id)
+                .orElseThrow(() -> new RegraNegocioException("Curso não encontrado."));
         } catch (PersistenceException e) {
             throw new RegraNegocioException("Erro ao buscar curso por ID.", e);
         }

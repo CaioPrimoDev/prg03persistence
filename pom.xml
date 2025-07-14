@@ -21,7 +21,7 @@
     <properties>
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <exec.mainClass>br.com.ifba.app.Main</exec.mainClass>
+        <exec.mainClass>br.com.ifba.app.Applications</exec.mainClass>
     </properties>
 
     <dependencies>

@@ -4,34 +4,43 @@
  */
 package br.com.ifba.curso.view;
 
-import br.com.ifba.curso.controller.CursoController;
 import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.exception.RegraNegocioException;
 import br.com.ifba.util.MensagemUtils;
-import java.awt.Component;
+
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.BoxLayout;
+import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author User
  */
-public class TelaCursosUI extends javax.swing.JFrame {
+
+@Component
+public class TelaCursosUI extends JFrame {
     
     private final CursoIController controller;
-
+    
+    @Autowired
+    private ApplicationContext context;
 
     /**
      * Creates new form TelaCursosUI
+     * @param controller
      */
-    public TelaCursosUI() {
-        this.controller = new CursoController();
+    
+
+    @Autowired
+    public TelaCursosUI(CursoIController controller) {
+        this.controller = controller;
         initComponents();
         
         scrollCursos.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -42,7 +51,8 @@ public class TelaCursosUI extends javax.swing.JFrame {
 
         
         // força o painel de linhas a usar alinhamento à esquerda
-        painelInternoCursos.setAlignmentX(Component.LEFT_ALIGNMENT);
+        painelInternoCursos.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
+
         
         // Altera o Layout para FlowLayout
         painelCabecalho.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
@@ -103,10 +113,11 @@ public class TelaCursosUI extends javax.swing.JFrame {
         for (Curso c : cursos) {
             LinhaCursoPanel linha = new LinhaCursoPanel();
             linha.setCurso(c);
-            linha.setAlignmentX(Component.LEFT_ALIGNMENT);
+            linha.setAlignmentX(java.awt.Component.LEFT_ALIGNMENT);
 
             linha.adicionarAcaoEditar(e -> {
-                new EditarCursoUI(this, c, true);
+                EditarCursoUI dialog = context.getBean(EditarCursoUI.class);
+                dialog.abrir(this, c, true);
                 carregarCursos();
             });
 
@@ -263,7 +274,8 @@ public class TelaCursosUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
-        new AdicionarCursoUI(this, true);
+        AdicionarCursoUI dialog = context.getBean(AdicionarCursoUI.class);
+        dialog.abrir(this, true);
         carregarCursos();
     }//GEN-LAST:event_btnAdicionarActionPerformed
 

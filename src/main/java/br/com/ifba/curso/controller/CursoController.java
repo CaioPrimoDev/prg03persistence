@@ -5,30 +5,24 @@
 package br.com.ifba.curso.controller;
 
 import br.com.ifba.curso.entity.Curso;
-import br.com.ifba.curso.service.CursoIService;
 import br.com.ifba.curso.service.CursoService;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author User
  */
+@Service
 public class CursoController implements CursoIController {
     
-    private final CursoIService service;
-    
-    public CursoController() {
-        this.service = new CursoService();
-    }
+    @Autowired
+    private CursoService service;
 
     @Override
     public boolean save(Curso curso) {
         return service.save(curso);
-    }
-
-    @Override
-    public boolean update(Curso curso) {
-        return service.update(curso);
     }
 
     @Override

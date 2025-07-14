@@ -5,29 +5,41 @@
 package br.com.ifba.curso.view;
 
 import br.com.ifba.curso.controller.CursoController;
+import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.exception.RegraNegocioException;
-import br.com.ifba.util.MensagemUtils;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author User
  */
+
+@Component
+@Scope("prototype")
 public class AdicionarCursoUI extends javax.swing.JDialog {
-    private final CursoController controller;
-    private final TelaCursosUI telaPrincipal;
+    
+    private final CursoIController controller;
+    private TelaCursosUI telaPrincipal;
     
     /**
      * Creates new form AdicionarCursoUI
      */
-    public AdicionarCursoUI(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        this.controller = new CursoController();
+    @Autowired
+    public AdicionarCursoUI(CursoIController controller) {
+        super((java.awt.Frame) null, false);
+        this.controller = controller;
         initComponents();
-        
+    }
+    
+    public void abrir(java.awt.Frame parent, boolean modal) {
         this.telaPrincipal = (TelaCursosUI) parent;
-        
+        setModal(modal);
+        setLocationRelativeTo(parent);
         setVisible(true);
     }
     
@@ -81,28 +93,37 @@ public class AdicionarCursoUI extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ADICIONAR CURSO");
         setModal(true);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().setLayout(null);
 
         jLabel1.setText("Nome");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 50, 30));
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(20, 30, 50, 30);
 
         jLabel2.setText("Carga Horaria ");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 90, 30));
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(20, 90, 90, 30);
 
         txtCargaHoraria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCargaHorariaActionPerformed(evt);
             }
         });
-        getContentPane().add(txtCargaHoraria, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 90, 80, 30));
+        getContentPane().add(txtCargaHoraria);
+        txtCargaHoraria.setBounds(130, 90, 80, 30);
 
         jLabel3.setText("Professor");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 60, 30));
-        getContentPane().add(txtProfessor, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 150, 80, 30));
-        getContentPane().add(txtNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 30, 80, 30));
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 30, 20));
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 230, 50, 30));
+        getContentPane().add(jLabel3);
+        jLabel3.setBounds(20, 150, 60, 30);
+        getContentPane().add(txtProfessor);
+        txtProfessor.setBounds(130, 150, 80, 30);
+        getContentPane().add(txtNome);
+        txtNome.setBounds(130, 30, 80, 30);
+        getContentPane().add(jLabel4);
+        jLabel4.setBounds(0, 0, 0, 0);
+        getContentPane().add(jLabel5);
+        jLabel5.setBounds(0, 0, 30, 20);
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(190, 230, 50, 30);
 
         btnSalvar.setText("SALVAR");
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
@@ -110,7 +131,8 @@ public class AdicionarCursoUI extends javax.swing.JDialog {
                 btnSalvarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 210, 90, 30));
+        getContentPane().add(btnSalvar);
+        btnSalvar.setBounds(80, 210, 90, 30);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
