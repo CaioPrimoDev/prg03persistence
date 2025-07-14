@@ -4,11 +4,9 @@
  */
 package br.com.ifba.curso.view;
 
-import br.com.ifba.curso.controller.CursoController;
 import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.exception.RegraNegocioException;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -39,6 +37,7 @@ public class AdicionarCursoUI extends javax.swing.JDialog {
     public void abrir(java.awt.Frame parent, boolean modal) {
         this.telaPrincipal = (TelaCursosUI) parent;
         setModal(modal);
+        setSize(250, 300);  // Ajuste esses valores para caber todo seu conteúdo
         setLocationRelativeTo(parent);
         setVisible(true);
     }

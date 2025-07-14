@@ -50,6 +50,7 @@ public class EditarCursoUI extends javax.swing.JDialog {
         txtProfessorAnt.setText(curso.getProfessor());
         
         setModal(modal);
+        setSize(400, 300);  // Ajuste esses valores para caber todo seu conteúdo
         setLocationRelativeTo(parent);
         setVisible(true);
     }
