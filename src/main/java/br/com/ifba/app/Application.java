@@ -7,6 +7,7 @@ import br.com.ifba.curso.controller.CursoController;
 import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.view.TelaCursosUI;
 import java.awt.EventQueue;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -24,8 +25,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories("br.com.ifba")  // ou mais específico
 @EntityScan("br.com.ifba")
 @ComponentScan("br.com.ifba")
+@Slf4j
 public class Application {
     public static void main(String[] args) {
+        log.info("Iniciando aplicação...");
         // Iniciar contexto Spring Boot
         ConfigurableApplicationContext context = 
             new SpringApplicationBuilder(Application.class)
@@ -33,13 +36,14 @@ public class Application {
                 .web(WebApplicationType.NONE)    // Sem servidor Web (aplicação desktop)
                 .run(args);
         
-        CursoIController controller = context.getBean(CursoController.class);
         // Iniciar UI Swing na EDT
         EventQueue.invokeLater(() -> {
             // Recuperar bean da janela principal (opcional) ou instanciar normalmente
             TelaCursosUI frame = context.getBean(TelaCursosUI.class);
             frame.setVisible(true);
         });
+        
+        log.info("Aplicação terminou inicialização da UI");
     }
 }
 

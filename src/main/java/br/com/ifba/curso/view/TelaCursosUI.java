@@ -15,6 +15,7 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
+@Slf4j
 public class TelaCursosUI extends JFrame {
     
     private final CursoIController controller;
@@ -41,6 +43,7 @@ public class TelaCursosUI extends JFrame {
     @Autowired
     public TelaCursosUI(CursoIController controller) {
         this.controller = controller;
+        log.info("Renderizando tela principal");
         initComponents();
         
         scrollCursos.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -127,11 +130,14 @@ public class TelaCursosUI extends JFrame {
                         "Confirmação")) {
                     try {
                         controller.delete(c.getId());
+                        log.info("Curso excluido com sucesso");
                         MensagemUtils.info(this, "Curso excluído com sucesso.", "Sucesso");
                         carregarCursos();
                     } catch (RegraNegocioException ex) {
+                        log.error("Erro ao excluir curso");
                         MensagemUtils.erro(this, ex.getMessage(), "Erro ao excluir curso");
                     } catch (Exception ex) {
+                        log.error("Erro inesperado ao excluir curso");
                         MensagemUtils.erro(this, "Erro inesperado ao excluir curso.", "Erro");
                         ex.printStackTrace();
                     }

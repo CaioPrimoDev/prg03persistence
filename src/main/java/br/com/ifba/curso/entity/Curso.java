@@ -9,6 +9,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 //import jakarta.persistence.GeneratedValue;
 //import jakarta.persistence.GenerationType;
 
@@ -19,6 +24,11 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "curso")
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Getter
+@Setter
 public class Curso extends PersistenceEntity {
 
     @Column(name = "nome", nullable = false, length = 100)
@@ -30,44 +40,17 @@ public class Curso extends PersistenceEntity {
     @Column(name = "professor", nullable = false, length = 100)
     private String professor;
 
-    public Curso() {}
-
-    public Curso(String nome, int cargaHoraria, String professor) {
-        this.nome = nome;
-        this.cargaHoraria = cargaHoraria;
-        this.professor = professor;
-    }
-
-    //public Long getCodigo() { return getId(); }
-    public String getNome() { return nome; }
-    public int getCargaHoraria() { return cargaHoraria; }
-    public String getProfessor() { return professor; }
-
-    //public void setCodigo(int codigo) { this.codigo = codigo; }
-    public void setNome(String nome) { this.nome = nome; }
-    public void setCargaHoraria(int cargaHoraria) { this.cargaHoraria = cargaHoraria; }
-    public void setProfessor(String professor) { this.professor = professor; }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Curso curso = (Curso) o;
-        return getId() == curso.getId();
+        // Mais segura, pois get retorna um objeto Long, e não um tipo primitivo
+        return Objects.equals(getId(), curso.getId());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getId());
-    }
-
-    @Override
-    public String toString() {
-        return "Curso{" +
-               "codigo=" + getId() +
-               ", nome='" + nome + '\'' +
-               ", cargaHoraria=" + cargaHoraria +
-               ", professor='" + professor + '\'' +
-               '}';
     }
 }

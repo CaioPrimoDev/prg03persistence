@@ -9,6 +9,7 @@ import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.entity.Curso;
 import br.com.ifba.exception.RegraNegocioException;
 import br.com.ifba.util.MensagemUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
+@Slf4j
 public class EditarCursoUI extends javax.swing.JDialog {
     
     private Curso curso;
@@ -31,12 +33,13 @@ public class EditarCursoUI extends javax.swing.JDialog {
     /**
      * Creates new form AdicionarCursoUI
      * 
+     * @param controller
      */
-    
-    @Autowired
+    @Autowired  
     public EditarCursoUI(CursoController controller) {
         super((java.awt.Frame) null, false); // Chama o construtor do JDialog sem pai e modal falso
         this.controller = controller;
+        log.info("Renderizando tela de edição");
         initComponents();
     }
 
@@ -66,6 +69,7 @@ public class EditarCursoUI extends javax.swing.JDialog {
         try {
             cargaHoraria = Integer.parseInt(cargaTxt);
         } catch (NumberFormatException ex) {
+            log.error("Erro de formatação: cargaHoraria inválida");
             cargaHoraria = -1; // será validado na camada de serviço
         }
         
@@ -77,15 +81,17 @@ public class EditarCursoUI extends javax.swing.JDialog {
         try {
             boolean sucesso = controller.save(curso);
             if (!sucesso) {
+                log.error("Erro: inserção de atributo vazio");
                 MensagemUtils.erro(this, "O sistema nao permite valores vazios!", "Erro");
                 return;
             } else {
                 telaPrincipal.carregarCursos();
-                System.out.println("\n\nCurso editado com sucesso, fechando janela...\n\n");
+                log.info("Curso editado com sucesso, fechando janela...");
                 dispose(); 
             }
  
         } catch (RegraNegocioException e) {
+            log.error("Erro de validação");
             MensagemUtils.erro(this, e.getMessage(), "Erro de validação");
         }
     }
